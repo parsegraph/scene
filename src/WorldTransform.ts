@@ -6,8 +6,8 @@ import {
   Matrix3x3,
   matrixIdentity3x3,
 } from "parsegraph-matrix";
-import {Projector} from "parsegraph-projector";
-import {LayoutNode} from "parsegraph-layout";
+import { Projector } from "parsegraph-projector";
+import { LayoutNode } from "parsegraph-layout";
 
 const scaleMat = matrixIdentity3x3();
 const transMat = matrixIdentity3x3();
@@ -87,7 +87,7 @@ export default class WorldTransform {
     return this._height;
   }
 
-  apply(proj: Projector, rootNode: LayoutNode, camScale: number = 1):void {
+  apply(proj: Projector, rootNode: LayoutNode, camScale: number = 1): void {
     const layout = rootNode.value().getLayout();
     const rootScale = rootNode.state().scale();
     if (proj.hasOverlay()) {
@@ -95,12 +95,12 @@ export default class WorldTransform {
       overlay.resetTransform();
       overlay.clearRect(0, 0, proj.width(), proj.height());
 
-      overlay.translate(
-        this.x(),
-        this.y()
-      );
+      overlay.translate(this.x(), this.y());
       overlay.scale(camScale, camScale);
-      overlay.scale(rootScale * layout.absoluteScale(), rootScale * layout.absoluteScale());
+      overlay.scale(
+        rootScale * layout.absoluteScale(),
+        rootScale * layout.absoluteScale()
+      );
     }
     if (proj.hasDOMContainer()) {
       const camScaleTx = `scale(${camScale}, ${camScale})`;
@@ -114,7 +114,7 @@ export default class WorldTransform {
     }
   }
 
-  static fromCamera(rootNode: LayoutNode, cam:Camera):WorldTransform {
+  static fromCamera(rootNode: LayoutNode, cam: Camera): WorldTransform {
     const layout = rootNode.value().getLayout();
     const project = () => {
       const world: Matrix3x3 = cam.project();
