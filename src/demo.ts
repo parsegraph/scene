@@ -1,63 +1,61 @@
-import todo from ".";
+import { BasicProjector } from "parsegraph-projector";
+import TimingBelt from "parsegraph-timingbelt";
+import AbstractScene from "./AbstractScene";
+
+const font = "96px sans"
+
+class Scene extends AbstractScene {
+  _dom:HTMLElement;
+
+  private createDom() {
+    this._dom = document.createElement("div");
+    this._dom.style.font = font;
+    this._dom.innerText = "No timey";
+  }
+
+  paint() {
+    const needsUpdate = super.paint();
+    this.projector().overlay();
+    if (!this._dom) {
+      this.createDom();
+    }
+    this.projector().getDOMContainer().appendChild(this._dom);
+    this._dom.style.position = "absolute";
+    this._dom.style.left = "0px";
+    this._dom.style.top = "70px";
+    return needsUpdate;
+  }
+
+  render() {
+    const needsUpdate = super.render();
+    const proj = this.projector();
+    const ctx = proj.overlay();
+    ctx.font = font;
+    ctx.fillStyle = "orange";
+    ctx.fillRect(0, 0, proj.width(), proj.height());
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "black";
+    ctx.fillText("No timey", 0, 0);
+
+    const w = proj.width();
+    const h = proj.height();
+    ctx.fillStyle = "blue";
+    const step = 10;
+    for(let x = 0; x < w; x += step) {
+      for(let y = 0; y < h; y += step) {
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+
+    return needsUpdate;
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById("demo");
-  root.style.position = "relative";
-
-  const container = document.createElement("div");
-  container.innerHTML = `${todo()}`;
-  container.style.position = "absolute";
-  container.style.left = "0px";
-  container.style.top = "0px";
-  container.style.pointerEvents = "none";
-  root.appendChild(container);
-  container.style.fontSize = "18px";
-  container.style.fontFamily = "sans";
-  const refresh = () => {
-    const rand = () => Math.floor(Math.random() * 255);
-    document.body.style.backgroundColor = `rgb(${rand()}, ${rand()}, ${rand()})`;
-    container.style.color = `rgb(${rand()}, ${rand()}, ${rand()})`;
-    container.style.left = `${Math.random() * root.clientWidth}px`;
-    container.style.top = `${Math.random() * root.clientHeight}px`;
-  };
-
-  const dot = document.createElement("div");
-  dot.style.position = "absolute";
-  dot.style.right = "8px";
-  dot.style.top = "8px";
-  dot.style.width = "16px";
-  dot.style.height = "16px";
-  dot.style.borderRadius = "8px";
-  dot.style.transition = "background-color 400ms";
-  dot.style.backgroundColor = "#222";
-  root.appendChild(dot);
-
-  container.style.transition = "color 2s, left 2s, top 2s";
-  document.body.style.transition = "background-color 2s";
-  let timer: any = null;
-  let dotTimer: any = null;
-  let dotIndex = 0;
-  const dotState = ["#f00", "#c00"];
-  const refreshDot = () => {
-    dotIndex = (dotIndex + 1) % dotState.length;
-    dot.style.backgroundColor = dotState[dotIndex];
-  };
-  const interval = 3000;
-  const dotInterval = 500;
-  root.addEventListener("click", () => {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-      clearInterval(dotTimer);
-      dotTimer = null;
-      dot.style.transition = "background-color 3s";
-      dot.style.backgroundColor = "#222";
-    } else {
-      refresh();
-      dot.style.transition = "background-color 400ms";
-      refreshDot();
-      timer = setInterval(refresh, interval);
-      dotTimer = setInterval(refreshDot, dotInterval);
-    }
-  });
+  const belt = new TimingBelt();
+  const proj = new BasicProjector();
+  const scene = new Scene(proj);
+  root.appendChild(proj.container());
+  belt.addRenderable(scene);
 });
