@@ -87,7 +87,7 @@ export default class WorldTransform {
     return this._height;
   }
 
-  apply(proj: Projector, rootNode: LayoutNode, camScale: number = 1): void {
+  applyTransform(proj: Projector, rootNode: LayoutNode, camScale: number = 1): void {
     const layout = rootNode.value().getLayout();
     const rootScale = rootNode.state().scale();
     if (proj.hasOverlay()) {
