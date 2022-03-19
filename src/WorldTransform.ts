@@ -95,8 +95,8 @@ export default class WorldTransform {
       overlay.resetTransform();
       overlay.clearRect(0, 0, proj.width(), proj.height());
 
-      overlay.translate(this.x(), this.y());
       overlay.scale(camScale, camScale);
+      overlay.translate(this.x(), this.y());
       overlay.scale(
         rootScale * layout.absoluteScale(),
         rootScale * layout.absoluteScale()
