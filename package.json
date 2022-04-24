@@ -53,11 +53,11 @@
     "webgl-debug": "^2.0.1"
   },
   "dependencies": {
-    "parsegraph-camera": "^1.4.11",
-    "parsegraph-layout": "^1.13.2",
+    "parsegraph-camera": "^1.4.14",
+    "parsegraph-layout": "^1.13.3",
     "parsegraph-matrix": "^1.4.11",
     "parsegraph-method": "^1.4.22",
-    "parsegraph-projector": "^1.13.1",
+    "parsegraph-projector": "^1.13.3",
     "parsegraph-timing": "^1.4.16",
     "parsegraph-timingbelt": "^1.7.11"
   }
