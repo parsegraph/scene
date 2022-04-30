@@ -56,7 +56,7 @@
     "parsegraph-layout": "^1.13.6",
     "parsegraph-matrix": "^1.4.12",
     "parsegraph-method": "^1.4.22",
-    "parsegraph-projector": "^1.13.6",
+    "parsegraph-projector": "^1.13.7",
     "parsegraph-timing": "^1.4.16",
     "parsegraph-timingbelt": "^1.7.11"
   }
