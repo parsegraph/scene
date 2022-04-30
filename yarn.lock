@@ -3887,10 +3887,10 @@ parsegraph-method@^1.4.10, parsegraph-method@^1.4.22:
   resolved "https://registry.yarnpkg.com/parsegraph-method/-/parsegraph-method-1.4.22.tgz#e73605b8f69a6040df3f1e689bde1f26c5b163d2"
   integrity sha512-7l1YOim5QH+Gc/HQYqBGvRPtyf1EwvjHODcYZIyxrQQVbnjkkG1vrhqIpdm3TlfRl2k9YU0BbfDNY9BmyL/UdA==
 
-parsegraph-projector@^1.13.7:
-  version "1.13.7"
-  resolved "https://registry.yarnpkg.com/parsegraph-projector/-/parsegraph-projector-1.13.7.tgz#9d3ebe30ee9c9da9b0841ebb23af0d16f4e8718c"
-  integrity sha512-sl20KzsaFW3i4b0JPaC+9NzlxX2RlGouFOnKYv4Ovv7+VmJThbjgxP1TKRuRRjvdY/+UFogPfQTvLmihIN+5uA==
+parsegraph-projector@^1.13.8:
+  version "1.13.8"
+  resolved "https://registry.yarnpkg.com/parsegraph-projector/-/parsegraph-projector-1.13.8.tgz#066b59de51c7acf36b828e47c8d5c56dce2a5498"
+  integrity sha512-YkrkE78YtQbJzyXJQNW/Z2i29+NbJd+uOC/TnX1o/sxjFQKEKDQHa/rqZDdLagEiOaZmkMc0jKwK3Eg5CbmnUA==
   dependencies:
     parsegraph-compileprogram "^2.2.15"
     parsegraph-matrix "^1.4.12"
