@@ -1,6 +1,6 @@
 {
   "name": "parsegraph-scene",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "scene",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
