@@ -2,10 +2,10 @@ import { BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
 import AbstractScene from "./AbstractScene";
 
-const font = "96px sans"
+const font = "96px sans";
 
 class Scene extends AbstractScene {
-  _dom:HTMLElement;
+  _dom: HTMLElement;
 
   private createDom() {
     this._dom = document.createElement("div");
@@ -41,8 +41,8 @@ class Scene extends AbstractScene {
     const h = proj.height();
     ctx.fillStyle = "blue";
     const step = 10;
-    for(let x = 0; x < w; x += step) {
-      for(let y = 0; y < h; y += step) {
+    for (let x = 0; x < w; x += step) {
+      for (let y = 0; y < h; y += step) {
         ctx.fillRect(x, y, 1, 1);
       }
     }
