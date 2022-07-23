@@ -93,18 +93,14 @@ export default class WorldTransform {
     camScale: number = 1
   ): void {
     const layout = rootNode.value().getLayout();
-    const rootScale = rootNode.state().scale();
     if (proj.hasOverlay()) {
       const overlay = proj.overlay();
       overlay.resetTransform();
       overlay.clearRect(0, 0, proj.width(), proj.height());
 
-      overlay.scale(camScale, camScale);
       overlay.translate(this.x(), this.y());
-      overlay.scale(
-        rootScale * layout.absoluteScale(),
-        rootScale * layout.absoluteScale()
-      );
+      overlay.scale(camScale, camScale);
+      overlay.scale(layout.absoluteScale(), layout.absoluteScale());
     }
     if (proj.hasDOMContainer()) {
       const camScaleTx = `scale(${camScale}, ${camScale})`;
