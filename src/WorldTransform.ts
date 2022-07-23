@@ -126,7 +126,7 @@ export default class WorldTransform {
     };
     return new WorldTransform(
       cam.canProject() ? project() : matrixIdentity3x3(),
-      cam.scale() * rootNode.state().scale(),
+      cam.scale() * layout.absoluteScale(),
       cam.width(),
       cam.height(),
       cam.x() + layout.absoluteX(),
