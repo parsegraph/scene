@@ -1,6 +1,6 @@
 {
   "name": "parsegraph-scene",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "scene",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -37,6 +37,8 @@
     "jest-environment-jsdom": "^28.1.3",
     "jsdom": "^20.0.0",
     "jsdom-global": "^3.0.2",
+    "parsegraph-checkglerror": "^1.5.3",
+    "parsegraph-log": "^1.7.3",
     "prettier": "^2.7.1",
     "raw-loader": "^4.0.2",
     "source-map-loader": "^4.0.0",
@@ -55,10 +57,7 @@
   "dependencies": {
     "parsegraph-camera": "^1.4.18",
     "parsegraph-layout": "^1.13.6",
-    "parsegraph-matrix": "^1.4.12",
     "parsegraph-method": "^1.4.22",
-    "parsegraph-projector": "^1.14.1",
-    "parsegraph-timing": "^1.4.16",
-    "parsegraph-timingbelt": "^1.7.12"
+    "parsegraph-projector": "^1.14.2"
   }
 }
