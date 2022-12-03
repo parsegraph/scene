@@ -5,7 +5,7 @@ import AbstractScene from "./AbstractScene";
 import { WorldLabels } from "./WorldLabel";
 import WorldTransform from "./WorldTransform";
 
-const font = "96px sans";
+const font = "96px sans-serif";
 
 class Scene extends AbstractScene {
   _dom: HTMLElement;
