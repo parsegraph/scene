@@ -92,7 +92,7 @@ export class WorldLabels {
     });
     drawnLabels.forEach((label) => {
       proj.overlay().font = `${Math.round(label.size()/scale)}px sans`;
-      proj.overlay().fillText(label.text(), scale * label.x(), scale * label.y());
+      proj.overlay().fillText(label.text(), label.x(), label.y());
     });
   }
 }
