@@ -83,7 +83,7 @@ export class WorldLabels {
       if (label.scale() <= scale) {
         return false;
       }
-      proj.overlay().font = `${Math.round(label.size()/scale)}px sans`;
+      proj.overlay().font = `${Math.round(label.size()/scale)}px sans-serif`;
       const metrics = proj.overlay().measureText(label.text());
       const height =
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
@@ -92,7 +92,7 @@ export class WorldLabels {
     });
     drawnLabels.forEach((label) => {
       const overlay = proj.overlay();
-      overlay.font = `${Math.round(label.size()/scale)}px sans`;
+      overlay.font = `${Math.round(label.size()/scale)}px sans-serif`;
       overlay.strokeStyle = 'white';
       overlay.lineWidth = 3/scale
       overlay.lineCap = "round"
