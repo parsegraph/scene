@@ -107,7 +107,6 @@ export default class WorldTransform {
       overlay.clearRect(0, 0, proj.width(), proj.height());
 
       overlay.translate(this.x(), this.y());
-      console.log("Overlay scale", camScale)
       overlay.scale(camScale, camScale);
       if (layout) {
         overlay.scale(layout.absoluteScale(), layout.absoluteScale());

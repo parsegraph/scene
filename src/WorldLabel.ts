@@ -77,7 +77,6 @@ export class WorldLabels {
   }
 
   render(proj: Projector, scale: number = 1) {
-    console.log("Rendering labels")
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
     const occluder = new Occluder();
     const drawnLabels = this._labels.filter((label) => {

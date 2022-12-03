@@ -51,7 +51,6 @@ class Scene extends AbstractScene {
     const needsUpdate = super.render();
     const proj = this.projector();
     const wt = WorldTransform.fromCamera(null, this._cam);
-    console.log(this._cam.scale())
     wt.applyTransform(proj, null, this._cam.scale());
 
     const ctx = proj.overlay();
@@ -89,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
     belt.scheduleUpdate()
   })
   proj.container().addEventListener("keydown", (e)=>{
-    console.log(e)
     const cam = scene._cam;
     if (e.key === '+' || e.key === '=') {
       cam.setScale(cam.scale() * 1.1);
@@ -97,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === '-' || e.key === '_') {
       cam.setScale(cam.scale() * 0.9)
     }
-    console.log(cam.scale())
     belt.scheduleUpdate()
   })
   proj.container().focus();
