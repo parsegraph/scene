@@ -88,7 +88,7 @@ export class WorldLabels {
       const height =
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
       const width = metrics.width;
-      return occluder.occlude(scale * label.x(), scale * label.y(), width, height);
+      return occluder.occlude(label.x(), label.y(), width, height);
     });
     drawnLabels.forEach((label) => {
       proj.overlay().font = `${Math.round(label.size()/scale)}px sans`;
