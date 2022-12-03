@@ -91,7 +91,13 @@ export class WorldLabels {
       return occluder.occlude(label.x(), label.y(), width, height);
     });
     drawnLabels.forEach((label) => {
-      proj.overlay().font = `${Math.round(label.size()/scale)}px sans`;
+      const overlay = proj.overlay();
+      overlay.font = `${Math.round(label.size()/scale)}px sans`;
+      overlay.strokeStyle = 'white';
+      overlay.lineWidth = 3
+      overlay.lineCap = "round"
+      proj.overlay().strokeText(label.text(), label.x(), label.y());
+      proj.overlay().fillStyle = 'black';
       proj.overlay().fillText(label.text(), label.x(), label.y());
     });
   }
