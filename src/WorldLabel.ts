@@ -94,7 +94,7 @@ export class WorldLabels {
       const overlay = proj.overlay();
       overlay.font = `${Math.round(label.size()/scale)}px sans`;
       overlay.strokeStyle = 'white';
-      overlay.lineWidth = 3
+      overlay.lineWidth = 3/scale
       overlay.lineCap = "round"
       overlay.textAlign = 'center'
       overlay.textBaseline = 'middle'
