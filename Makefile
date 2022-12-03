@@ -5,6 +5,7 @@ SCRIPT_FILES = \
 	src/Transformed.ts \
 	src/WorldRenderable.ts \
 	src/AbstractScene.ts \
+	src/WorldLabel.ts \
 	src/WorldTransform.ts \
 	src/demo.ts \
 	test/test.ts
