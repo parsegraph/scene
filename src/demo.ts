@@ -4,6 +4,7 @@ import TimingBelt from "parsegraph-timingbelt";
 import AbstractScene from "./AbstractScene";
 import { WorldLabels } from "./WorldLabel";
 import WorldTransform from "./WorldTransform";
+import Color from 'parsegraph-color';
 
 const font = "96px sans-serif";
 
@@ -50,7 +51,7 @@ class Scene extends AbstractScene {
       const x = Math.random() * proj.width();
       const y = Math.random() * proj.height();
       const size = 12 + 36 * Math.random()
-      this._labels.draw("Hello", x, y, size, Math.random() * 10);
+      this._labels.draw("Hello", x, y, size, Math.random() * 10, new Color(Math.random(), Math.random(), Math.random()));
     }
     this._labels.draw("Hello", 50, 0, 25, 2);
     return needsUpdate;

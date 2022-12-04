@@ -1,6 +1,7 @@
 import { Projector } from "parsegraph-projector";
 import Rect from 'parsegraph-rect';
 import {containsAny} from 'parsegraph-camera'
+import Color from 'parsegraph-color';
 
 export class Occluder {
   _rects: Rect[];
@@ -25,23 +26,27 @@ export class Occluder {
   }
 }
 
+const DEFAULT_COLOR = new Color(0, 0, 0, 1);
+
 export class WorldLabel {
   _text: string;
   _x: number;
   _y: number;
   _size: number;
   _scale: number;
+  _color: Color;
 
   text() {
     return this._text;
   }
 
-  constructor(text: string, x: number, y: number, size: number, scale: number) {
+  constructor(text: string, x: number, y: number, size: number, scale: number, color: Color) {
     this._text = text;
     this._x = x;
     this._y = y;
     this._size = size;
     this._scale = scale;
+    this._color = color;
   }
 
   x() {
@@ -59,6 +64,10 @@ export class WorldLabel {
   size() {
     return this._size;
   }
+
+  color() {
+    return this._color ?? DEFAULT_COLOR;
+  }
 }
 
 export class WorldLabels {
@@ -68,8 +77,8 @@ export class WorldLabels {
 
   _labels: WorldLabel[];
 
-  draw(text: string, x: number, y: number, size: number, scale: number = 1) {
-    this._labels.push(new WorldLabel(text, x, y, size, scale));
+  draw(text: string, x: number, y: number, size: number, scale: number = 1, color: Color = null) {
+    this._labels.push(new WorldLabel(text, x, y, size, scale, color));
   }
 
   clear() {
@@ -93,13 +102,14 @@ export class WorldLabels {
     drawnLabels.forEach((label) => {
       const overlay = proj.overlay();
       overlay.font = `${Math.round(label.size()/scale)}px sans-serif`;
-      overlay.strokeStyle = 'white';
-      overlay.lineWidth = 3/scale
+      console.log(label.color().luminance());
+      overlay.strokeStyle = label.color().luminance() < 0.1 ? 'white' : 'black';
+      overlay.lineWidth = 2/scale
       overlay.lineCap = "round"
       overlay.textAlign = 'center'
       overlay.textBaseline = 'middle'
       proj.overlay().strokeText(label.text(), label.x(), label.y());
-      proj.overlay().fillStyle = 'black';
+      proj.overlay().fillStyle = label.color().asRGB();
       proj.overlay().fillText(label.text(), label.x(), label.y());
     });
   }
