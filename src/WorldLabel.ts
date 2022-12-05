@@ -77,8 +77,12 @@ export class WorldLabel {
 }
 
 export class WorldLabels {
+  _lineWidth: number;
+  _font: string;
   constructor() {
     this.clear();
+    this._lineWidth = 2;
+    this._font = "sans-serif";
   }
 
   _labels: WorldLabel[];
@@ -91,6 +95,22 @@ export class WorldLabels {
     this._labels = [];
   }
 
+  lineWidth() {
+    return this._lineWidth;
+  }
+
+  setLineWidth(width: number) {
+    this._lineWidth = width;
+  }
+
+  font() {
+    return this._font;
+  }
+
+  setFont(font: string) {
+    this._font = font;
+  }
+
   render(proj: Projector, scale: number = 1) {
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
     const occluder = new Occluder();
@@ -98,7 +118,7 @@ export class WorldLabels {
       if (label.scale() <= scale) {
         return false;
       }
-      proj.overlay().font = `${Math.round(label.size()/scale)}px sans-serif`;
+      proj.overlay().font = `${Math.round(label.size()/scale)}px ${this.font()}`;
       const metrics = proj.overlay().measureText(label.text());
       const height =
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
@@ -107,9 +127,9 @@ export class WorldLabels {
     });
     drawnLabels.forEach((label) => {
       const overlay = proj.overlay();
-      overlay.font = `${Math.round(label.size()/scale)}px sans-serif`;
+      overlay.font = `${Math.round(label.size()/scale)}px ${this.font()}`;
       overlay.strokeStyle = label.strokeColor() ? label.strokeColor().asRGB() : (label.color().luminance() < 0.1 ? 'white' : 'black');
-      overlay.lineWidth = 2/scale
+      overlay.lineWidth = this.lineWidth()/scale
       overlay.lineCap = "round"
       overlay.textAlign = 'center'
       overlay.textBaseline = 'middle'
