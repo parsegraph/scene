@@ -35,18 +35,20 @@ export class WorldLabel {
   _size: number;
   _scale: number;
   _color: Color;
+  _strokeColor: Color;
 
   text() {
     return this._text;
   }
 
-  constructor(text: string, x: number, y: number, size: number, scale: number, color: Color) {
+  constructor(text: string, x: number, y: number, size: number, scale: number, color: Color, strokeColor: Color) {
     this._text = text;
     this._x = x;
     this._y = y;
     this._size = size;
     this._scale = scale;
     this._color = color;
+    this._strokeColor = strokeColor;
   }
 
   x() {
@@ -68,6 +70,10 @@ export class WorldLabel {
   color() {
     return this._color ?? DEFAULT_COLOR;
   }
+
+  strokeColor() {
+    return this._strokeColor;
+  }
 }
 
 export class WorldLabels {
@@ -77,8 +83,8 @@ export class WorldLabels {
 
   _labels: WorldLabel[];
 
-  draw(text: string, x: number, y: number, size: number, scale: number = 1, color: Color = null) {
-    this._labels.push(new WorldLabel(text, x, y, size, scale, color));
+  draw(text: string, x: number, y: number, size: number, scale: number = 1, color: Color = null, strokeColor: Color = null) {
+    this._labels.push(new WorldLabel(text, x, y, size, scale, color, strokeColor));
   }
 
   clear() {
@@ -103,7 +109,7 @@ export class WorldLabels {
       const overlay = proj.overlay();
       overlay.font = `${Math.round(label.size()/scale)}px sans-serif`;
       console.log(label.color().luminance());
-      overlay.strokeStyle = label.color().luminance() < 0.1 ? 'white' : 'black';
+      overlay.strokeStyle = label.strokeColor() ? label.strokeColor().asRGB() : (label.color().luminance() < 0.1 ? 'white' : 'black');
       overlay.lineWidth = 2/scale
       overlay.lineCap = "round"
       overlay.textAlign = 'center'
