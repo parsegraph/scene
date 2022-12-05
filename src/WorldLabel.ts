@@ -108,7 +108,6 @@ export class WorldLabels {
     drawnLabels.forEach((label) => {
       const overlay = proj.overlay();
       overlay.font = `${Math.round(label.size()/scale)}px sans-serif`;
-      console.log(label.color().luminance());
       overlay.strokeStyle = label.strokeColor() ? label.strokeColor().asRGB() : (label.color().luminance() < 0.1 ? 'white' : 'black');
       overlay.lineWidth = 2/scale
       overlay.lineCap = "round"
