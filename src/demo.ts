@@ -4,7 +4,7 @@ import TimingBelt from "parsegraph-timingbelt";
 import AbstractScene from "./AbstractScene";
 import { WorldLabels } from "./WorldLabel";
 import WorldTransform from "./WorldTransform";
-import Color from 'parsegraph-color';
+import Color from "parsegraph-color";
 
 const font = "96px sans-serif";
 
@@ -40,18 +40,26 @@ class Scene extends AbstractScene {
     this._dom.style.top = "70px";
 
     this._labels.clear();
-    for(let i = 0; i < proj.width(); ++i) {
+    for (let i = 0; i < proj.width(); ++i) {
       if (i % 10 === 0) {
         this._labels.draw("Hello", i, i, 24, 1);
       } else {
         this._labels.draw("Hello", i, i, 12, 1);
       }
     }
-    for(let i = 0; i < 50; ++i) {
+    for (let i = 0; i < 50; ++i) {
       const x = Math.random() * proj.width();
       const y = Math.random() * proj.height();
-      const size = 12 + 36 * Math.random()
-      this._labels.draw("Hello", x, y, size, Math.random() * 10, new Color(0, 0, 0, 1), new Color(Math.random(), Math.random(), Math.random()));
+      const size = 12 + 36 * Math.random();
+      this._labels.draw(
+        "Hello",
+        x,
+        y,
+        size,
+        Math.random() * 10,
+        new Color(0, 0, 0, 1),
+        new Color(Math.random(), Math.random(), Math.random())
+      );
     }
     this._labels.draw("Hello", 50, 0, 25, 2);
     return needsUpdate;
@@ -99,18 +107,22 @@ document.addEventListener("DOMContentLoaded", () => {
     redraw();
   }, 0);
 
-  const redraw = ()=>{
+  const redraw = () => {
     proj.glProvider().canvas();
     proj.overlay();
     proj.render();
     proj.glProvider().gl().viewport(0, 0, proj.width(), proj.height());
-    console.log("REDRAW")
+    console.log("REDRAW");
     cam.setSize(proj.width(), proj.height());
     proj.overlay().resetTransform();
     proj.overlay().clearRect(0, 0, proj.width(), proj.height());
-    WorldTransform.fromCamera(null, cam).applyTransform(proj, null, cam.scale());
+    WorldTransform.fromCamera(null, cam).applyTransform(
+      proj,
+      null,
+      cam.scale()
+    );
     scene.render();
-  }
+  };
   let clicked = false;
   root.addEventListener("mousedown", (e) => {
     if (e.button === 0) {
@@ -130,19 +142,23 @@ document.addEventListener("DOMContentLoaded", () => {
       clicked = false;
     }
   });
-  proj.container().addEventListener("wheel", (e)=>{
-    cam.zoomToPoint((e as WheelEvent).deltaY < 0 ? 1.1 : 0.9, e.clientX*cam.scale(), e.clientY*cam.scale());
+  proj.container().addEventListener("wheel", (e) => {
+    cam.zoomToPoint(
+      (e as WheelEvent).deltaY < 0 ? 1.1 : 0.9,
+      e.clientX * cam.scale(),
+      e.clientY * cam.scale()
+    );
     redraw();
-  })
-  proj.container().addEventListener("keydown", (e)=>{
-    if (e.key === '+' || e.key === '=') {
+  });
+  proj.container().addEventListener("keydown", (e) => {
+    if (e.key === "+" || e.key === "=") {
       cam.setScale(cam.scale() * 1.1);
     }
-    if (e.key === '-' || e.key === '_') {
-      cam.setScale(cam.scale() * 0.9)
+    if (e.key === "-" || e.key === "_") {
+      cam.setScale(cam.scale() * 0.9);
     }
-    belt.scheduleUpdate()
-  })
+    belt.scheduleUpdate();
+  });
   proj.container().focus();
   root.appendChild(proj.container());
   belt.addRenderable(scene);

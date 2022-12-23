@@ -1,12 +1,14 @@
 import { Projector } from "parsegraph-projector";
-import Rect from 'parsegraph-rect';
-import {containsAny} from 'parsegraph-camera'
-import Color from 'parsegraph-color';
+import Rect from "parsegraph-rect";
+import { containsAny } from "parsegraph-camera";
+import Color from "parsegraph-color";
 
 export class Occluder {
   _rects: Rect[];
+  _bbox: Rect;
 
-  constructor() {
+  constructor(x: number, y: number, width: number, height: number) {
+    this._bbox = new Rect(x, y, width, height);
     this.clear();
   }
 
@@ -16,9 +18,25 @@ export class Occluder {
 
   occlude(x: number, y: number, w: number, h: number) {
     const newRect = new Rect(x, y, w, h);
-    if (this._rects.some(rect => {
-      return containsAny(rect.x(), rect.y(), rect.w(), rect.h(), x, y, w, h);
-    })) {
+    if (
+      !containsAny(
+        this._bbox.x(),
+        this._bbox.y(),
+        this._bbox.width(),
+        this._bbox.height(),
+        x,
+        y,
+        w,
+        h
+      )
+    ) {
+      return false;
+    }
+    if (
+      this._rects.some((rect) => {
+        return containsAny(rect.x(), rect.y(), rect.w(), rect.h(), x, y, w, h);
+      })
+    ) {
       return false;
     }
     this._rects.push(newRect);
@@ -41,7 +59,15 @@ export class WorldLabel {
     return this._text;
   }
 
-  constructor(text: string, x: number, y: number, size: number, scale: number, color: Color, strokeColor: Color) {
+  constructor(
+    text: string,
+    x: number,
+    y: number,
+    size: number,
+    scale: number,
+    color: Color,
+    strokeColor: Color
+  ) {
     this._text = text;
     this._x = x;
     this._y = y;
@@ -87,8 +113,18 @@ export class WorldLabels {
 
   _labels: WorldLabel[];
 
-  draw(text: string, x: number, y: number, size: number, scale: number = 1, color: Color = null, strokeColor: Color = null) {
-    this._labels.push(new WorldLabel(text, x, y, size, scale, color, strokeColor));
+  draw(
+    text: string,
+    x: number,
+    y: number,
+    size: number,
+    scale: number = 1,
+    color: Color = null,
+    strokeColor: Color = null
+  ) {
+    this._labels.push(
+      new WorldLabel(text, x, y, size, scale, color, strokeColor)
+    );
   }
 
   clear() {
@@ -113,26 +149,42 @@ export class WorldLabels {
 
   render(proj: Projector, scale: number = 1) {
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
-    const occluder = new Occluder();
+    const occluder = new Occluder(
+      proj.width() / 2,
+      proj.height() / 2,
+      proj.width(),
+      proj.height()
+    );
     const drawnLabels = this._labels.filter((label) => {
       if (label.scale() <= scale) {
         return false;
       }
-      proj.overlay().font = `${Math.round(label.size()/scale)}px ${this.font()}`;
+      proj.overlay().font = `${Math.round(
+        label.size() / scale
+      )}px ${this.font()}`;
       const metrics = proj.overlay().measureText(label.text());
       const height =
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
       const width = metrics.width;
-      return occluder.occlude(label.x() - width / 2, label.y() - height / 2, width, height);
+      return occluder.occlude(
+        label.x() - width / 2,
+        label.y() - height / 2,
+        width,
+        height
+      );
     });
     drawnLabels.forEach((label) => {
       const overlay = proj.overlay();
-      overlay.font = `${Math.round(label.size()/scale)}px ${this.font()}`;
-      overlay.strokeStyle = label.strokeColor() ? label.strokeColor().asRGB() : (label.color().luminance() < 0.1 ? 'white' : 'black');
-      overlay.lineWidth = this.lineWidth()/scale
-      overlay.lineCap = "round"
-      overlay.textAlign = 'center'
-      overlay.textBaseline = 'middle'
+      overlay.font = `${Math.round(label.size() / scale)}px ${this.font()}`;
+      overlay.strokeStyle = label.strokeColor()
+        ? label.strokeColor().asRGB()
+        : label.color().luminance() < 0.1
+        ? "white"
+        : "black";
+      overlay.lineWidth = this.lineWidth() / scale;
+      overlay.lineCap = "round";
+      overlay.textAlign = "center";
+      overlay.textBaseline = "middle";
       proj.overlay().strokeText(label.text(), label.x(), label.y());
       proj.overlay().fillStyle = label.color().asRGB();
       proj.overlay().fillText(label.text(), label.x(), label.y());
