@@ -150,8 +150,8 @@ export class WorldLabels {
   render(proj: Projector, x: number = 0, y:number = 0, scale: number = 1) {
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
     const occluder = new Occluder(
-      x + proj.width() / 2,
-      y + proj.height() / 2,
+      x,
+      y,
       proj.width() / scale,
       proj.height() / scale
     );
