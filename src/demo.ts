@@ -88,7 +88,7 @@ class Scene extends AbstractScene {
         ctx.fillRect(x, y, 1, 1);
       }
     }
-    this._labels.render(proj, this._cam.x(), this._cam.y(), this._cam.scale());
+    this._labels.render(proj, this._cam.x(), this._cam.y(), this._cam.width(), this._cam.height(), this._cam.scale());
 
     return needsUpdate;
   }
