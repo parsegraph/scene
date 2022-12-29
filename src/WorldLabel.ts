@@ -147,13 +147,13 @@ export class WorldLabels {
     this._font = font;
   }
 
-  render(proj: Projector, scale: number = 1) {
+  render(proj: Projector, x: number = 0, y:number = 0, scale: number = 1) {
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
     const occluder = new Occluder(
-      proj.width() / 2,
-      proj.height() / 2,
-      proj.width(),
-      proj.height()
+      x + proj.width() / 2,
+      y + proj.height() / 2,
+      proj.width() / scale,
+      proj.height() / scale
     );
     const drawnLabels = this._labels.filter((label) => {
       if (label.scale() <= scale) {
