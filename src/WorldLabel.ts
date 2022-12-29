@@ -17,7 +17,6 @@ export class Occluder {
   }
 
   occlude(x: number, y: number, w: number, h: number) {
-    const newRect = new Rect(x, y, w, h);
     if (
       !containsAny(
         this._bbox.x(),
@@ -39,6 +38,7 @@ export class Occluder {
     ) {
       return false;
     }
+    const newRect = new Rect(x, y, w, h);
     this._rects.push(newRect);
     return true;
   }
