@@ -52,7 +52,7 @@ class Scene extends AbstractScene {
       const y = Math.random() * proj.height();
       const size = 12 + 36 * Math.random();
       this._labels.draw(
-        "Hello",
+        "DOWNWARD",
         x,
         y,
         size,
@@ -61,7 +61,7 @@ class Scene extends AbstractScene {
         new Color(Math.random(), Math.random(), Math.random())
       );
     }
-    this._labels.draw("Hello", 50, 0, 25, 2);
+    this._labels.draw("Hello", 50, 0, 16, 2);
     return needsUpdate;
   }
 
