@@ -167,8 +167,8 @@ export class WorldLabels {
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
       const width = metrics.width;
       return occluder.occlude(
-        label.x() - width / 2,
-        label.y() - height / 2,
+        label.x(),
+        label.y(),
         width,
         height
       );
