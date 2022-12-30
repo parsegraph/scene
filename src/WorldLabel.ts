@@ -181,6 +181,7 @@ export class WorldLabels {
         : label.color().luminance() < 0.1
         ? "white"
         : "black";
+      overlay.miterLimit = this.lineWidth();
       overlay.lineWidth = this.lineWidth() / scale;
       overlay.lineCap = "round";
       overlay.textAlign = "center";
