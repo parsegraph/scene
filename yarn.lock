@@ -4053,10 +4053,10 @@ parsegraph-gettimeinmillis@^1.4.7:
   resolved "https://registry.yarnpkg.com/parsegraph-gettimeinmillis/-/parsegraph-gettimeinmillis-1.4.7.tgz#ee0749d2cdac66c21c5d46f9cfc41b7adf562bd4"
   integrity sha512-JssLleswIxH53iTWC8XZUw4grZp2lDdtl7NCYf50v5n2u1lGXpeRjn1JNW1td2iqlqAy3E/nzBXzDXZpQdMMsg==
 
-parsegraph-layout@^1.13.12:
-  version "1.13.12"
-  resolved "https://registry.yarnpkg.com/parsegraph-layout/-/parsegraph-layout-1.13.12.tgz#4547239a7a46c56e0f52aad08768fc4909d1699b"
-  integrity sha512-dgirK1ZwTW8bf4TW6CZ2RHnKUayqZxAOuRL23ktN7uNiFaMXLey6IZPZvNthqeG48bCmfuNdJfMxO8tlswjuGw==
+parsegraph-layout@^1.13.13:
+  version "1.13.13"
+  resolved "https://registry.yarnpkg.com/parsegraph-layout/-/parsegraph-layout-1.13.13.tgz#bff353bfdd355873288c17c43b888f6639e44b1d"
+  integrity sha512-LlVE5D9X1luzPy1eYI9tTTgvuVqNKVswfNsKizbdEZpbIAca2RPsCsrKO4m/OOO+UZa9y3gp5Dj7kIJ9vZNNpw==
   dependencies:
     jest-environment-jsdom "^29.3.1"
     parsegraph-direction "^2.1.4"
