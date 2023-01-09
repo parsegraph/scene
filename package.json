@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "parsegraph-camera": "^1.4.19",
-    "parsegraph-layout": "^1.13.13",
+    "parsegraph-layout": "^1.13.14",
     "parsegraph-method": "^1.4.23",
     "parsegraph-projector": "^1.14.6"
   }
