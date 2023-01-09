@@ -38,7 +38,7 @@
     "jsdom": "^20.0.0",
     "jsdom-global": "^3.0.2",
     "parsegraph-checkglerror": "^1.5.4",
-    "parsegraph-log": "^1.7.4",
+    "parsegraph-log": "^1.9.0",
     "prettier": "^2.7.1",
     "raw-loader": "^4.0.2",
     "source-map-loader": "^4.0.0",
@@ -52,11 +52,11 @@
   },
   "peerDependencies": {
     "parsegraph-checkglerror": "^1.5.4",
-    "parsegraph-log": "^1.7.4"
+    "parsegraph-log": "^1.9.0"
   },
   "dependencies": {
     "parsegraph-camera": "^1.4.19",
-    "parsegraph-layout": "^1.13.10",
+    "parsegraph-layout": "^1.13.11",
     "parsegraph-method": "^1.4.23",
     "parsegraph-projector": "^1.14.4"
   }

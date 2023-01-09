@@ -4053,10 +4053,10 @@ parsegraph-gettimeinmillis@^1.4.7:
   resolved "https://registry.yarnpkg.com/parsegraph-gettimeinmillis/-/parsegraph-gettimeinmillis-1.4.7.tgz#ee0749d2cdac66c21c5d46f9cfc41b7adf562bd4"
   integrity sha512-JssLleswIxH53iTWC8XZUw4grZp2lDdtl7NCYf50v5n2u1lGXpeRjn1JNW1td2iqlqAy3E/nzBXzDXZpQdMMsg==
 
-parsegraph-layout@^1.13.10:
-  version "1.13.10"
-  resolved "https://registry.yarnpkg.com/parsegraph-layout/-/parsegraph-layout-1.13.10.tgz#70de8002e81166fbc6df26baf4ca80807ccac4bf"
-  integrity sha512-Wl6wDHMK6x87b0/GgeVr/5mLbWoDjZJcnNpfuwVuAxkmC6PgxWpJPFwwtMyb2uDu2FW2owKsvy2422hva0YbAQ==
+parsegraph-layout@^1.13.11:
+  version "1.13.11"
+  resolved "https://registry.yarnpkg.com/parsegraph-layout/-/parsegraph-layout-1.13.11.tgz#a9b4ab0f02a3107efa6adebf78a2b25e0c0ec349"
+  integrity sha512-S7POvYYWHPZTHSuhxTtqMbcYJEZr0245hlbprAvASzLhJI0RSo8C/GF3OeJlqwaZkVEBlKLR+UktqCKOY89ANQ==
   dependencies:
     jest-environment-jsdom "^29.3.1"
     parsegraph-direction "^2.1.4"
@@ -4065,10 +4065,10 @@ parsegraph-layout@^1.13.10:
     parsegraph-size "^1.7.2"
     parsegraph-timing "^1.4.17"
 
-parsegraph-log@^1.7.4:
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/parsegraph-log/-/parsegraph-log-1.7.4.tgz#43f50cf4ef44413b2f460a6fff942fe5feb235d6"
-  integrity sha512-FZkrRr30/hZx5bc9as4OLruYpaPJN3w8lgfGLk42AiICvvSWMFcbzk5hyWk3oZ4sBbPZy1VYgJgKSVHfo05asA==
+parsegraph-log@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/parsegraph-log/-/parsegraph-log-1.9.0.tgz#4c00ea79945a4c783b5daaa043599b964054f05b"
+  integrity sha512-Qx0zEY45y2z6hBl93WeCBIfQJJE8Qx3GQBkDGvKpmbal62Xpf4f8sZFlm/9/hMzEba60EPwBIEUNvUoi1cYiRA==
 
 parsegraph-matrix@^1.4.13:
   version "1.4.13"
