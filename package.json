@@ -55,11 +55,11 @@
     "parsegraph-log": "^1.9.2"
   },
   "dependencies": {
-    "parsegraph-camera": "^1.4.19",
+    "parsegraph-camera": "^1.4.20",
     "parsegraph-color": "^1.4.11",
     "parsegraph-layout": "^1.13.14",
     "parsegraph-matrix": "^1.4.14",
-    "parsegraph-method": "^1.4.23",
+    "parsegraph-method": "^1.4.24",
     "parsegraph-projector": "^1.14.6",
     "parsegraph-rect": "^1.5.3",
     "parsegraph-timing": "^1.4.17",
