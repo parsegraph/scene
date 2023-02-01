@@ -60,7 +60,7 @@
     "parsegraph-layout": "^1.13.17",
     "parsegraph-matrix": "^1.4.15",
     "parsegraph-method": "^1.4.25",
-    "parsegraph-projector": "^1.14.9",
+    "parsegraph-projector": "^1.14.10",
     "parsegraph-rect": "^1.5.4",
     "parsegraph-timing": "^1.4.19",
     "parsegraph-timingbelt": "^1.8.3"
