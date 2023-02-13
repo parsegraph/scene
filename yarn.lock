@@ -3977,10 +3977,10 @@ parsegraph-gettimeinmillis@^1.4.9:
   resolved "https://registry.yarnpkg.com/parsegraph-gettimeinmillis/-/parsegraph-gettimeinmillis-1.4.9.tgz#2b921d515b1cf767d8a84447e8c7d0376b344d86"
   integrity sha512-az+nImOhRkRJDUyn/QgA5Pgb7aSIeXlHL3i+hBPFxCD9cVRFy99MxKrcqxaRCQqcg2vFtP1GhacbkWx598vwtw==
 
-parsegraph-layout@^1.13.20:
-  version "1.13.20"
-  resolved "https://registry.yarnpkg.com/parsegraph-layout/-/parsegraph-layout-1.13.20.tgz#5bdc2fd1291a7e090426781d9a7ffb825bb84f77"
-  integrity sha512-FieSk6X/lVdssreotPQ98hP8F4z9ibMJ5niQ4yB3q3YK6qGDrXWcz8KSlM4kaexxLcRQPhNaTbz+YaF5/dKHig==
+parsegraph-layout@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/parsegraph-layout/-/parsegraph-layout-1.14.0.tgz#b48da40288ebe365d5550cae591dec2bf43a28e9"
+  integrity sha512-2vKzhH+UYUQgWLoiLvistoNNNeHRmlqAG4LfeFHmQ/5a8Fn3pbjixZw1Q4QV5GS7qp9kd3JTaLdjKE89pAEGxw==
   dependencies:
     parsegraph-direction "^2.3.0"
     parsegraph-extent "^1.4.16"
