@@ -7,12 +7,10 @@ import InputViewport, { MIN_CAMERA_SCALE } from "./InputViewport";
 export default class ViewportMouseController extends BasicMouseController {
   _dragging: boolean;
   _mouseVersion: number;
-  _mousePos: [number, number];
   _viewport: InputViewport;
 
   constructor(viewport: InputViewport) {
     super();
-    this._mousePos = [0, 0];
     this._mouseVersion = 0;
     this._viewport = viewport;
     this._dragging = false;
@@ -20,11 +18,6 @@ export default class ViewportMouseController extends BasicMouseController {
 
   viewport() {
     return this._viewport;
-  }
-
-  savePos(x: number, y: number) {
-    this._mousePos[0] = x;
-    this._mousePos[1] = y;
   }
 
   update(_: Date) {
