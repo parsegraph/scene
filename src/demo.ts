@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   proj.container().tabIndex = 0;
   const scene = new Scene(proj);
 
-  const viewport = new Viewport(new Color(0, 0, 0, 1), scene);
+  const viewport = new Viewport(new Color(0.2, 0.2, 0.2, 1), scene);
   scene.setViewport(viewport);
 
   belt.addRenderable(viewport);
