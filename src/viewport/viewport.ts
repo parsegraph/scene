@@ -260,7 +260,6 @@ export default class Viewport implements Renderable, InputViewport {
     this.renderBackground(projector);
     overlay.textBaseline = "top";
 
-    console.log("Setting wt");
     this.scene().setWorldTransform(WorldTransform.fromCamera(this.camera()));
     if (this.scene().render()) {
       needsUpdate = true;

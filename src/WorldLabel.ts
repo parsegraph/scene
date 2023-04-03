@@ -30,6 +30,7 @@ export class Occluder {
         h
       )
     ) {
+      //console.log("Occluded outside bbox", this._bbox.toString(), x, y, w, h);
       return false;
     }
     if (
