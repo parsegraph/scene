@@ -60,7 +60,7 @@ class Scene extends AbstractScene {
         x,
         y,
         size,
-        Math.random() * 10,
+        1,
         new Color(0, 0, 0, 1),
         new Color(Math.random(), Math.random(), Math.random())
       );
