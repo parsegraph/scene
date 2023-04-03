@@ -13,6 +13,7 @@ class Scene extends AbstractScene {
   _labels: WorldLabels;
 
   _needsRepaint: boolean;
+  _viewport: Viewport;
 
   constructor(projector: Projector) {
     super(projector);
@@ -89,12 +90,26 @@ class Scene extends AbstractScene {
         ctx.fillRect(x, y, 1, 1);
       }
     }
-    this._labels?.render(
-      proj,
-      this.worldTransform()
-    );
+    this._labels?.render(proj, this.worldTransform());
+
+    ctx.resetTransform();
+    ctx.textBaseline="top";
+    ctx.textAlign="left";
+    ctx.fillStyle = "white";
+    ctx.font = "18px mono";
+    ctx.fillText("scale=" + this.worldTransform().scale(), 0, 0);
+    if (this._viewport) {
+      const mouse = this._viewport.mouse();
+
+      const [tx, ty] = this._viewport.camera().transform(mouse.lastMouseX(), mouse.lastMouseY());
+      ctx.fillText(`mouse=(${tx}, ${ty})`, 0, 16);
+    }
 
     return needsUpdate;
+  }
+
+  setViewport(viewport: Viewport) {
+    this._viewport = viewport;
   }
 }
 
@@ -106,6 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
   proj.container().tabIndex = 0;
   const scene = new Scene(proj);
 
-  belt.addRenderable(new Viewport(new Color(0, 0, 0, 1), scene));
+  const viewport = new Viewport(new Color(0, 0, 0, 1), scene);
+  scene.setViewport(viewport);
+
+  belt.addRenderable(viewport);
   root.appendChild(proj.container());
 });
