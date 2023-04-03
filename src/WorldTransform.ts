@@ -99,16 +99,16 @@ export default class WorldTransform {
       overlay.resetTransform();
       overlay.clearRect(0, 0, proj.width(), proj.height());
 
+      overlay.scale(this.scale() * camScale, this.scale() * camScale);
       overlay.translate(this.x(), this.y());
-      overlay.scale(camScale, camScale);
     }
     if (proj.hasDOMContainer()) {
-      const camScaleTx = `scale(${camScale}, ${camScale})`;
+      const scale = `scale(${this.scale() * camScale}, ${this.scale() * camScale})`;
       const translate = `translate(${this.x()}px, ${this.y()}px)`;
-      proj.getDOMContainer().style.transform = [
-        translate,
-        camScaleTx,
-      ].join(" ");
+      proj.getDOMContainer().style.transformOrigin = "left top";
+      proj.getDOMContainer().style.transform = [scale, translate].join(
+        " "
+      );
     }
   }
 
