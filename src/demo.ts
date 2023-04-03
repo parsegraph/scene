@@ -25,6 +25,7 @@ class Scene extends AbstractScene {
     this._dom.style.font = font;
     this._dom.innerText = "No timey";
     this._labels = new WorldLabels();
+    this._labels.setScaleMultiplier(2);
   }
 
   paint() {
