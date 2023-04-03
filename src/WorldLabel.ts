@@ -107,9 +107,12 @@ export class WorldLabel {
 export class WorldLabels {
   _lineWidth: number;
   _font: string;
+  _scaleMultiplier: number;
+
   constructor() {
     this.clear();
     this._lineWidth = 2;
+    this._scaleMultiplier = 1;
     this._font = "sans-serif";
   }
 
@@ -149,19 +152,20 @@ export class WorldLabels {
     this._font = font;
   }
 
-  render(
-    proj: Projector,
-    wt: WorldTransform
-  ) {
+  setScaleMultiplier(multiplier: number) {
+    this._scaleMultiplier = multiplier;
+  }
+
+  render(proj: Projector, wt: WorldTransform) {
     const x = wt.x();
     const y = wt.y();
-    const w = wt.width();
-    const h = wt.height();
     const scale = wt.scale();
+    const w = wt.width()/scale;
+    const h = wt.height()/scale;
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
-    const occluder = new Occluder(x, y, w, h);
+    const occluder = new Occluder(-x + w/2,-y + h/2, w, h);
     const drawnLabels = this._labels.filter((label) => {
-      if (label.scale() <= scale) {
+      if (label.scale() <= scale / this._scaleMultiplier) {
         return false;
       }
       proj.overlay().font = `${Math.round(
