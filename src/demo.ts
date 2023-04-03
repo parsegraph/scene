@@ -44,7 +44,7 @@ class Scene extends AbstractScene {
     this._dom.style.top = "70px";
 
     this._labels.clear();
-    for (let i = 0; i < proj.width(); ++i) {
+    for (let i = 0; i < Math.min(proj.height(), proj.width()); ++i) {
       if (i % 10 === 0) {
         this._labels.draw("Hello", i, i, 24, 1);
       } else {
