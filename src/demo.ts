@@ -3,7 +3,7 @@ import TimingBelt from "parsegraph-timingbelt";
 import AbstractScene from "./AbstractScene";
 import { WorldLabels } from "./WorldLabel";
 import Color from "parsegraph-color";
-import {Viewport} from "./viewport";
+import { Viewport } from "./viewport";
 
 const font = "96px sans-serif";
 

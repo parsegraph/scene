@@ -1,8 +1,5 @@
 import Camera from "parsegraph-camera";
-import {
-  Matrix3x3,
-  matrixIdentity3x3,
-} from "parsegraph-matrix";
+import { Matrix3x3, matrixIdentity3x3 } from "parsegraph-matrix";
 import { Projector } from "parsegraph-projector";
 import { WorldLabels } from "./WorldLabel";
 
@@ -96,10 +93,7 @@ export default class WorldTransform {
     this._labels.render(proj, this);
   }
 
-  applyTransform(
-    proj: Projector,
-    camScale: number = 1
-  ):void {
+  applyTransform(proj: Projector, camScale: number = 1): void {
     if (proj.hasOverlay()) {
       const overlay = proj.overlay();
       overlay.resetTransform();

@@ -1,6 +1,6 @@
 import { Renderable } from "parsegraph-timingbelt";
 import Transformed from "./Transformed";
-import {Projector} from 'parsegraph-projector';
+import { Projector } from "parsegraph-projector";
 
 interface ProjectedScene {
   projector(): Projector;

@@ -275,7 +275,9 @@ export default class Viewport implements Renderable, InputViewport {
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
       }
-      inputProj.overlay().clearRect(0, 0, projector.width(), projector.height());
+      inputProj
+        .overlay()
+        .clearRect(0, 0, projector.width(), projector.height());
       inputProj?.render();
       if (this._input.render(inputProj)) {
         this.scheduleRender();
