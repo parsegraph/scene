@@ -46,7 +46,9 @@ export default abstract class AbstractScene implements WorldRenderable {
   }
 
   render() {
-    return this.projector().render();
+    const needsUpdate = this.projector().render();
+    this.worldTransform().applyTransform(this.projector());
+    return needsUpdate;
   }
 
   unmount() {}

@@ -1,22 +1,22 @@
-import Camera from "parsegraph-camera";
 import { Projector, BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
 import AbstractScene from "./AbstractScene";
 import { WorldLabels } from "./WorldLabel";
-import WorldTransform from "./WorldTransform";
 import Color from "parsegraph-color";
+import {Viewport} from "./viewport";
 
 const font = "96px sans-serif";
 
 class Scene extends AbstractScene {
   _dom: HTMLElement;
 
-  _cam: Camera;
   _labels: WorldLabels;
 
-  constructor(projector: Projector, cam: Camera) {
+  _needsRepaint: boolean;
+
+  constructor(projector: Projector) {
     super(projector);
-    this._cam = cam;
+    this._needsRepaint = true;
   }
 
   private createDom() {
@@ -28,12 +28,15 @@ class Scene extends AbstractScene {
 
   paint() {
     const needsUpdate = super.paint();
+    if (!needsUpdate && !this._needsRepaint) {
+      return false;
+    }
+    this._needsRepaint = false;
     const proj = this.projector();
     proj.overlay();
     if (!this._dom) {
       this.createDom();
     }
-    this._cam.setSize(proj.width(), proj.height());
     proj.getDOMContainer().appendChild(this._dom);
     this._dom.style.position = "absolute";
     this._dom.style.left = "0px";
@@ -68,8 +71,6 @@ class Scene extends AbstractScene {
   render() {
     const needsUpdate = super.render();
     const proj = this.projector();
-    const wt = WorldTransform.fromCamera(null, this._cam);
-    wt.applyTransform(proj, null, this._cam.scale());
 
     const ctx = proj.overlay();
     ctx.font = font;
@@ -88,13 +89,9 @@ class Scene extends AbstractScene {
         ctx.fillRect(x, y, 1, 1);
       }
     }
-    this._labels.render(
+    this._labels?.render(
       proj,
-      -this._cam.x() + this._cam.width()/2,
-      -this._cam.y() + this._cam.height()/2,
-      this._cam.width()/this._cam.scale(),
-      this._cam.height()/this._cam.scale(),
-      this._cam.scale()
+      this.worldTransform()
     );
 
     return needsUpdate;
@@ -103,70 +100,12 @@ class Scene extends AbstractScene {
 
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById("demo");
+
   const belt = new TimingBelt();
   const proj = new BasicProjector();
-  const cam = new Camera();
-  const scene = new Scene(proj, cam);
   proj.container().tabIndex = 0;
+  const scene = new Scene(proj);
 
-  setTimeout(() => {
-    scene.paint();
-    redraw();
-  }, 0);
-
-  const redraw = () => {
-    proj.glProvider().canvas();
-    proj.overlay();
-    proj.render();
-    proj.glProvider().gl().viewport(0, 0, proj.width(), proj.height());
-    console.log("REDRAW");
-    cam.setSize(proj.width(), proj.height());
-    proj.overlay().resetTransform();
-    proj.overlay().clearRect(0, 0, proj.width(), proj.height());
-    WorldTransform.fromCamera(null, cam).applyTransform(
-      proj,
-      null,
-      cam.scale()
-    );
-    scene.render();
-  };
-  let clicked = false;
-  root.addEventListener("mousedown", (e) => {
-    if (e.button === 0) {
-      clicked = true;
-    }
-  });
-  root.addEventListener("mousemove", (e) => {
-    if (!clicked) {
-      return;
-    }
-    console.log(e.movementX);
-    cam.adjustOrigin(e.movementX / cam.scale(), e.movementY / cam.scale());
-    redraw();
-  });
-  root.addEventListener("mouseup", (e) => {
-    if (e.button === 0) {
-      clicked = false;
-    }
-  });
-  proj.container().addEventListener("wheel", (e) => {
-    cam.zoomToPoint(
-      (e as WheelEvent).deltaY < 0 ? 1.1 : 0.9,
-      e.clientX * cam.scale(),
-      e.clientY * cam.scale()
-    );
-    redraw();
-  });
-  proj.container().addEventListener("keydown", (e) => {
-    if (e.key === "+" || e.key === "=") {
-      cam.setScale(cam.scale() * 1.1);
-    }
-    if (e.key === "-" || e.key === "_") {
-      cam.setScale(cam.scale() * 0.9);
-    }
-    belt.scheduleUpdate();
-  });
-  proj.container().focus();
+  belt.addRenderable(new Viewport(new Color(0, 0, 0, 1), scene));
   root.appendChild(proj.container());
-  belt.addRenderable(scene);
 });

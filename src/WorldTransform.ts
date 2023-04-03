@@ -1,18 +1,11 @@
 import Camera from "parsegraph-camera";
 import {
-  makeScale3x3I,
-  makeTranslation3x3I,
-  matrixMultiply3x3I,
   Matrix3x3,
   matrixIdentity3x3,
 } from "parsegraph-matrix";
 import { Projector } from "parsegraph-projector";
-import { LayoutNode } from "parsegraph-layout";
 import { WorldLabels } from "./WorldLabel";
 
-const scaleMat = matrixIdentity3x3();
-const transMat = matrixIdentity3x3();
-const worldMat = matrixIdentity3x3();
 export default class WorldTransform {
   _world: Matrix3x3;
   _scale: number;
@@ -95,12 +88,18 @@ export default class WorldTransform {
     return this._height;
   }
 
+  labels() {
+    return this._labels;
+  }
+
+  render(proj: Projector) {
+    this._labels.render(proj, this);
+  }
+
   applyTransform(
     proj: Projector,
-    rootNode: LayoutNode | null,
     camScale: number = 1
-  ): void {
-    const layout = rootNode?.value().getLayout();
+  ):void {
     if (proj.hasOverlay()) {
       const overlay = proj.overlay();
       overlay.resetTransform();
@@ -108,30 +107,15 @@ export default class WorldTransform {
 
       overlay.translate(this.x(), this.y());
       overlay.scale(camScale, camScale);
-      if (layout) {
-        overlay.scale(layout.absoluteScale(), layout.absoluteScale());
-      }
     }
     if (proj.hasDOMContainer()) {
       const camScaleTx = `scale(${camScale}, ${camScale})`;
       const translate = `translate(${this.x()}px, ${this.y()}px)`;
-      const nodeScale = layout
-        ? `scale(${layout.absoluteScale()}, ${layout.absoluteScale()})`
-        : "";
       proj.getDOMContainer().style.transform = [
         translate,
         camScaleTx,
-        nodeScale,
       ].join(" ");
     }
-  }
-
-  labels() {
-    return this._labels;
-  }
-
-  render(proj: Projector) {
-    this._labels.render(proj, this.scale());
   }
 
   static fromPos(
@@ -148,25 +132,14 @@ export default class WorldTransform {
     return new WorldTransform(cam.project(), scale, width, height, x, y);
   }
 
-  static fromCamera(rootNode: LayoutNode | null, cam: Camera): WorldTransform {
-    const layout = rootNode?.value().getLayout();
-    const project = () => {
-      const world: Matrix3x3 = cam.project();
-      if (layout) {
-        makeScale3x3I(scaleMat, layout.absoluteScale());
-        makeTranslation3x3I(transMat, layout.absoluteX(), layout.absoluteY());
-        matrixMultiply3x3I(worldMat, scaleMat, transMat);
-        matrixMultiply3x3I(worldMat, worldMat, world);
-      }
-      return world;
-    };
+  static fromCamera(cam: Camera): WorldTransform {
     return new WorldTransform(
-      cam.canProject() ? project() : matrixIdentity3x3(),
-      cam.scale() * (layout ? layout.absoluteScale() : 1),
+      cam.canProject() ? cam.project() : matrixIdentity3x3(),
+      cam.scale(),
       cam.width(),
       cam.height(),
-      cam.x() + (layout ? layout.absoluteX() : 0),
-      cam.y() + (layout ? layout.absoluteY() : 0)
+      cam.x(),
+      cam.y()
     );
   }
 }

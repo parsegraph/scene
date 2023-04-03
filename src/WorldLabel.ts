@@ -2,6 +2,7 @@ import { Projector } from "parsegraph-projector";
 import Rect from "parsegraph-rect";
 import { containsAny } from "parsegraph-camera";
 import Color from "parsegraph-color";
+import WorldTransform from "./WorldTransform";
 
 export class Occluder {
   _rects: Rect[];
@@ -147,14 +148,17 @@ export class WorldLabels {
     this._font = font;
   }
 
-  render(proj: Projector, x: number = 0, y:number = 0, w:number = proj.width(), h:number = proj.height(), scale: number = 1) {
+  render(
+    proj: Projector,
+    wt: WorldTransform
+  ) {
+    const x = wt.x();
+    const y = wt.y();
+    const w = wt.width();
+    const h = wt.height();
+    const scale = wt.scale();
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
-    const occluder = new Occluder(
-      x,
-      y,
-      w,
-      h
-    );
+    const occluder = new Occluder(x, y, w, h);
     const drawnLabels = this._labels.filter((label) => {
       if (label.scale() <= scale) {
         return false;
@@ -166,12 +170,7 @@ export class WorldLabels {
       const height =
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
       const width = metrics.width;
-      return occluder.occlude(
-        label.x(),
-        label.y(),
-        width,
-        height
-      );
+      return occluder.occlude(label.x(), label.y(), width, height);
     });
     drawnLabels.forEach((label) => {
       const overlay = proj.overlay();
