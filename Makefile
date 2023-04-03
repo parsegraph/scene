@@ -7,6 +7,13 @@ SCRIPT_FILES = \
 	src/AbstractScene.ts \
 	src/WorldLabel.ts \
 	src/WorldTransform.ts \
+	src/render.ts \
+	src/viewport/input.ts \
+	src/viewport/index.ts \
+	src/viewport/mouse.ts \
+	src/viewport/key.ts \
+	src/viewport/viewport.ts \
+	src/viewport/InputViewport.ts \
 	src/demo.ts \
 	test/test.ts
 
