@@ -15,6 +15,7 @@ SCRIPT_FILES = \
 	src/viewport/viewport.ts \
 	src/viewport/InputViewport.ts \
 	src/demo.ts \
+	src/drawing.ts \
 	src/scroller.ts \
 	test/test.ts
 
