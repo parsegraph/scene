@@ -10,14 +10,11 @@ import InputViewport from "./InputViewport";
 import ViewportInputController from "./input";
 import WorldTransform from "../WorldTransform";
 
-const FOCUS_SCALE = 2;
-
 export default class Viewport implements Renderable, InputViewport {
   _camera: Camera;
   _input: ViewportInputController;
   _renderedMouse: number;
   _needsRender: boolean;
-  _focusScale: number;
   _backgroundColor: Color;
   _needsRepaint: boolean;
   _update: Method;
@@ -41,8 +38,6 @@ export default class Viewport implements Renderable, InputViewport {
 
     this._renderedMouse = -1;
     this._needsRender = true;
-
-    this._focusScale = FOCUS_SCALE;
 
     this._unmount = null;
     this._needsRepaint = true;
@@ -204,21 +199,6 @@ export default class Viewport implements Renderable, InputViewport {
   setBackgroundColor(color: Color) {
     this._backgroundColor = color;
     this.scheduleRender();
-  }
-
-  setFocusScale(scale: number) {
-    // console.log("Focus scale is changing: " + scale);
-    this._focusScale = scale;
-    this.scheduleRender();
-  }
-
-  getFocusScale() {
-    // console.log("Reading focus scale: " + this._focusScale);
-    return this._focusScale;
-  }
-
-  getRequiredScale() {
-    return this.getFocusScale();
   }
 
   private renderBackground(projector: Projector) {

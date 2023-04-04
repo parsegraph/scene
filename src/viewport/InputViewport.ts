@@ -8,7 +8,5 @@ export default interface InputViewport {
   camera(): Camera;
   resetCamera(complete?: boolean): void;
   scheduleRepaint(): void;
-  setFocusScale(scale: number): void;
-  getFocusScale(): number;
   mouseVersion(): number;
 }
