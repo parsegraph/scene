@@ -40,7 +40,7 @@ export default class ViewportKeyController implements KeyController {
   lastMouseY() {
     return this.next()
       ? this.next().lastMouseY()
-      : this.viewport().lastMouseX();
+      : this.viewport().lastMouseY();
   }
 
   getKey(key: string) {
