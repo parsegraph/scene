@@ -72,7 +72,7 @@ export default class ViewportKeyController implements KeyController {
     }
     this.keydowns[event.name()] = new Date();
 
-    return false;
+    return true;
   }
 
   keyup(event: Keystroke) {
@@ -82,11 +82,11 @@ export default class ViewportKeyController implements KeyController {
 
     if (!this.keydowns[event.name()]) {
       // Already processed.
-      return;
+      return false;
     }
     delete this.keydowns[event.name()];
 
-    return false;
+    return true;
   }
 
   viewport() {
