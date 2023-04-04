@@ -41,6 +41,13 @@ class Input {
     this._touch.mount(this.domContainer());
   }
 
+  unmount() {
+    this._touch.unmount();
+    this._mouse.unmount();
+    this._key.unmount();
+    this._focus.unmount();
+  }
+
   mouse() {
     return this._mouse;
   }
@@ -129,6 +136,15 @@ export default class ViewportInputController {
       needsUpdate = true;
     }
     return needsUpdate;
+  }
+
+  unmount(projector: Projector) {
+    if (!this._inputs.has(projector)) {
+      return;
+    }
+    const input = this._inputs.get(projector);
+    input.unmount();
+    this._inputs.delete(projector);
   }
 
   paint(projector: Projector): boolean {
