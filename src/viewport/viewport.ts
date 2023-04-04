@@ -235,8 +235,14 @@ export default class Viewport implements Renderable, InputViewport {
     if (this._scene === scene) {
       return;
     }
+    if (this._scene) {
+      this._scene.setOnScheduleUpdate(null);
+    }
     this.unmount();
     this._scene = scene;
+    if (this._scene) {
+      this._scene.setOnScheduleUpdate(() => this.scheduleRepaint());
+    }
     this.scheduleRepaint();
   }
 
