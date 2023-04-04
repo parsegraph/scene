@@ -79,7 +79,9 @@ export default class Viewport implements Renderable, InputViewport {
   }
 
   tick(startDate: number): boolean {
-    return this._input.update(new Date(startDate));
+    let needsUpdate = this._input.update(new Date(startDate));
+    needsUpdate = this._scene?.tick(startDate) || needsUpdate;
+    return needsUpdate;
   }
 
   unmount() {
