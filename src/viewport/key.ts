@@ -15,6 +15,7 @@ const ZOOM_OUT_KEY = "ZoomOut";
 export default class ViewportKeyController implements KeyController {
   keydowns: { [id: string]: Date };
   _viewport: InputViewport;
+  _next: KeyController;
 
   constructor(viewport: InputViewport) {
     // A map of keyName's to a true value.
@@ -22,12 +23,20 @@ export default class ViewportKeyController implements KeyController {
     this._viewport = viewport;
   }
 
+  next() {
+    return this._next;
+  }
+
+  setNext(next: KeyController) {
+    this._next = next;
+  }
+
   lastMouseX() {
-    return this.viewport().lastMouseX();
+    return this.next() ? this.next().lastMouseX() : this.viewport().lastMouseX();
   }
 
   lastMouseY() {
-    return this.viewport().lastMouseX();
+    return this.next() ? this.next().lastMouseY() : this.viewport().lastMouseX();
   }
 
   getKey(key: string) {
@@ -49,6 +58,10 @@ export default class ViewportKeyController implements KeyController {
   }
 
   keydown(event: Keystroke) {
+    if (this.next()?.keydown(event)) {
+      return true;
+    }
+
     if (!event.name().length) {
       return false;
     }
@@ -63,6 +76,10 @@ export default class ViewportKeyController implements KeyController {
   }
 
   keyup(event: Keystroke) {
+    if (this.next()?.keydown(event)) {
+      return true;
+    }
+
     if (!this.keydowns[event.name()]) {
       // Already processed.
       return;
@@ -86,7 +103,7 @@ export default class ViewportKeyController implements KeyController {
     const ySpeed = 1000 / cam.scale();
     const scaleSpeed = 20;
 
-    let needsUpdate = false;
+    let needsUpdate = this.next()?.update(t);
 
     if (this.getKey(RESET_CAMERA_KEY)) {
       this.viewport().resetCamera(false);

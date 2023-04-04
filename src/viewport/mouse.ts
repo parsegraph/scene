@@ -1,5 +1,5 @@
 import { makeInverse3x3, matrixTransform2D } from "parsegraph-matrix";
-import { BasicMouseController } from "parsegraph-input";
+import { BasicMouseController, MouseController } from "parsegraph-input";
 import { logc } from "parsegraph-log";
 
 import InputViewport, { MIN_CAMERA_SCALE } from "./InputViewport";
@@ -8,10 +8,12 @@ export default class ViewportMouseController extends BasicMouseController {
   _dragging: boolean;
   _mouseVersion: number;
   _viewport: InputViewport;
+  _next: MouseController;
 
   constructor(viewport: InputViewport) {
     super();
     this._mouseVersion = 0;
+    this._next = null;
     this._viewport = viewport;
     this._dragging = false;
   }
@@ -20,12 +22,33 @@ export default class ViewportMouseController extends BasicMouseController {
     return this._viewport;
   }
 
-  update(_: Date) {
-    const needsUpdate = this.viewport().mouseVersion() !== this.mouseVersion();
+  scheduleRepaint() {
+    this.viewport().scheduleRepaint();
+  }
+
+  mouseVersion() {
+    return this._mouseVersion;
+  }
+
+  mouseChanged() {
+    ++this._mouseVersion;
+  }
+
+  update(t: Date) {
+    let needsUpdate = this.next()?.update(t);
+    needsUpdate = needsUpdate || this.viewport().mouseVersion() !== this.mouseVersion();
     if (needsUpdate) {
       logc("Schedule updates", "Mouse needs update");
     }
     return needsUpdate;
+  }
+
+  next() {
+    return this._next;
+  }
+
+  setNext(next: MouseController) {
+    this._next = next;
   }
 
   mouseDrag(_: number, _2: number, dx: number, dy: number) {
@@ -38,6 +61,10 @@ export default class ViewportMouseController extends BasicMouseController {
   }
 
   mousedown(button: any, downTime: number, x: number, y: number): boolean {
+    if (this.next()?.mousedown(button, downTime, x, y)) {
+      return true;
+    }
+
     super.mousedown(button, downTime, x, y);
 
     const mouseInWorld = matrixTransform2D(
@@ -51,7 +78,19 @@ export default class ViewportMouseController extends BasicMouseController {
     return true;
   }
 
+  lastMouseX() {
+    return this.next()?.lastMouseX() ?? super.lastMouseX();
+  }
+
+  lastMouseY() {
+    return this.next()?.lastMouseY() ?? super.lastMouseX();
+  }
+
   mousemove(x: number, y: number): boolean {
+    if (this.next()?.mousemove(x, y)) {
+      return true;
+    }
+
     const dx = x - this.lastMouseX();
     const dy = y - this.lastMouseY();
     super.mousemove(x, y);
@@ -70,17 +109,21 @@ export default class ViewportMouseController extends BasicMouseController {
     return true;
   }
 
-  scheduleRepaint() {
-    this.viewport().scheduleRepaint();
-  }
-
   mouseup(button: any, downTime: number, x: number, y: number) {
+    if (this.next()?.mouseup(button, downTime, x, y)) {
+      return true;
+    }
+
     super.mouseup(button, downTime, x, y);
     this._dragging = false;
     return false;
   }
 
   wheel(mag: number, x: number, y: number): boolean {
+    if (this.next()?.wheel(mag, x, y)) {
+      return true;
+    }
+
     super.wheel(mag, x, y);
 
     // Adjust the scale.
@@ -93,13 +136,5 @@ export default class ViewportMouseController extends BasicMouseController {
     this.mouseChanged();
     this.scheduleRepaint();
     return true;
-  }
-
-  mouseVersion() {
-    return this._mouseVersion;
-  }
-
-  mouseChanged() {
-    ++this._mouseVersion;
   }
 }
