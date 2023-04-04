@@ -83,7 +83,7 @@ export default class Viewport implements Renderable, InputViewport {
   }
 
   unmount() {
-    this._inputLayer.glProvider().container().remove();
+    this._inputLayer?.glProvider().container().remove();
   }
 
   camera() {
