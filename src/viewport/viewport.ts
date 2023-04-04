@@ -24,10 +24,9 @@ export default class Viewport implements Renderable, InputViewport {
   _unmount: () => void;
 
   constructor(
-    backgroundColor: Color = new Color(149 / 255, 149 / 255, 149 / 255, 1),
-    scene: WorldRenderable
+    backgroundColor: Color = new Color(149 / 255, 149 / 255, 149 / 255, 1)
   ) {
-    this._scene = scene;
+    this._scene = null;
     // Construct the graph.
     this._update = new Method();
     this._backgroundColor = backgroundColor;
@@ -137,7 +136,7 @@ export default class Viewport implements Renderable, InputViewport {
   }
 
   projector() {
-    return this.scene().projector();
+    return this.scene()?.projector();
   }
 
   /*
@@ -172,7 +171,7 @@ export default class Viewport implements Renderable, InputViewport {
         needsUpdate = true;
       }
 
-      if (this.scene().paint(timeout)) {
+      if (this.scene()?.paint(timeout)) {
         needsUpdate = true;
       }
     }
@@ -228,20 +227,33 @@ export default class Viewport implements Renderable, InputViewport {
     return this._scene;
   }
 
+  setScene(scene: WorldRenderable) {
+    if (this._scene === scene) {
+      return;
+    }
+    this.unmount();
+    this._scene = scene;
+    this.scheduleRepaint();
+  }
+
   render(): boolean {
     const projector = this.projector();
-    // width: number, height: number, avoidIfPossible: boolean): boolean {
+
+    // Set camera size
+    this.camera().setSize(projector.width(), projector.height());
+
+    // Render background
     const overlay = projector.overlay();
     overlay.resetTransform();
     overlay.clearRect(0, 0, projector.width(), projector.height());
-    let needsUpdate = false;
-    this.camera().setSize(projector.width(), projector.height());
-
     this.renderBackground(projector);
-    overlay.textBaseline = "top";
 
-    this.scene().setWorldTransform(WorldTransform.fromCamera(this.camera()));
-    if (this.scene().render()) {
+    overlay.textBaseline = "top";
+    let needsUpdate = false;
+
+    // Render scene
+    this.scene()?.setWorldTransform(WorldTransform.fromCamera(this.camera()));
+    if (this.scene()?.render()) {
       needsUpdate = true;
     }
 
