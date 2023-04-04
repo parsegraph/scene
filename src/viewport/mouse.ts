@@ -84,7 +84,7 @@ export default class ViewportMouseController extends BasicMouseController {
   }
 
   lastMouseY() {
-    return this.next()?.lastMouseY() ?? super.lastMouseX();
+    return this.next()?.lastMouseY() ?? super.lastMouseY();
   }
 
   mousemove(x: number, y: number): boolean {
