@@ -76,7 +76,7 @@ export default class ViewportKeyController implements KeyController {
   }
 
   keyup(event: Keystroke) {
-    if (this.next()?.keydown(event)) {
+    if (this.next()?.keyup(event)) {
       return true;
     }
 
