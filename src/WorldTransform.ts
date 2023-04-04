@@ -103,12 +103,12 @@ export default class WorldTransform {
       overlay.translate(this.x(), this.y());
     }
     if (proj.hasDOMContainer()) {
-      const scale = `scale(${this.scale() * camScale}, ${this.scale() * camScale})`;
+      const scale = `scale(${this.scale() * camScale}, ${
+        this.scale() * camScale
+      })`;
       const translate = `translate(${this.x()}px, ${this.y()}px)`;
       proj.getDOMContainer().style.transformOrigin = "left top";
-      proj.getDOMContainer().style.transform = [scale, translate].join(
-        " "
-      );
+      proj.getDOMContainer().style.transform = [scale, translate].join(" ");
     }
   }
 

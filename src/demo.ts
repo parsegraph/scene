@@ -94,15 +94,17 @@ class Scene extends AbstractScene {
     this._labels?.render(proj, this.worldTransform());
 
     ctx.resetTransform();
-    ctx.textBaseline="top";
-    ctx.textAlign="left";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "left";
     ctx.fillStyle = "white";
     ctx.font = "18px mono";
     ctx.fillText("scale=" + this.worldTransform().scale(), 0, 0);
     if (this._viewport) {
       const mouse = this._viewport.mouse();
 
-      const [tx, ty] = this._viewport.camera().transform(mouse.lastMouseX(), mouse.lastMouseY());
+      const [tx, ty] = this._viewport
+        .camera()
+        .transform(mouse.lastMouseX(), mouse.lastMouseY());
       ctx.fillText(`mouse=(${tx}, ${ty})`, 0, 16);
     }
 

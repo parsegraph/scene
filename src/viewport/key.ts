@@ -32,11 +32,15 @@ export default class ViewportKeyController implements KeyController {
   }
 
   lastMouseX() {
-    return this.next() ? this.next().lastMouseX() : this.viewport().lastMouseX();
+    return this.next()
+      ? this.next().lastMouseX()
+      : this.viewport().lastMouseX();
   }
 
   lastMouseY() {
-    return this.next() ? this.next().lastMouseY() : this.viewport().lastMouseX();
+    return this.next()
+      ? this.next().lastMouseY()
+      : this.viewport().lastMouseX();
   }
 
   getKey(key: string) {

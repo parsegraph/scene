@@ -36,7 +36,8 @@ export default class ViewportMouseController extends BasicMouseController {
 
   update(t: Date) {
     let needsUpdate = this.next()?.update(t);
-    needsUpdate = needsUpdate || this.viewport().mouseVersion() !== this.mouseVersion();
+    needsUpdate =
+      needsUpdate || this.viewport().mouseVersion() !== this.mouseVersion();
     if (needsUpdate) {
       logc("Schedule updates", "Mouse needs update");
     }
@@ -54,7 +55,7 @@ export default class ViewportMouseController extends BasicMouseController {
   mouseDrag(_: number, _2: number, dx: number, dy: number) {
     this.mouseChanged();
     const camera = this.viewport().camera();
-    //console.log("Adjust orig", dx, dx / camera.scale(), dy / camera.scale());
+    // console.log("Adjust orig", dx, dx / camera.scale(), dy / camera.scale());
     camera.adjustOrigin(dx / camera.scale(), dy / camera.scale());
     this.scheduleRepaint();
     return true;
@@ -130,7 +131,7 @@ export default class ViewportMouseController extends BasicMouseController {
     const numSteps = mag > 0 ? -1 : 1;
     const camera = this.viewport().camera();
     if (numSteps > 0 || camera.scale() >= MIN_CAMERA_SCALE) {
-      //console.log("Zooming to", x, y, camera.transform(x, y), camera.scale());
+      // console.log("Zooming to", x, y, camera.transform(x, y), camera.scale());
       camera.zoomToPoint(Math.pow(1.1, numSteps), x, y);
     }
     this.mouseChanged();

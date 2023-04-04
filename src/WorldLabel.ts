@@ -30,7 +30,7 @@ export class Occluder {
         h
       )
     ) {
-      //console.log("Occluded outside bbox", this._bbox.toString(), x, y, w, h);
+      // console.log("Occluded outside bbox", this._bbox.toString(), x, y, w, h);
       return false;
     }
     if (
@@ -160,10 +160,10 @@ export class WorldLabels {
     const x = wt.x();
     const y = wt.y();
     const scale = wt.scale();
-    const w = wt.width()/scale;
-    const h = wt.height()/scale;
+    const w = wt.width() / scale;
+    const h = wt.height() / scale;
     this._labels = this._labels.sort((a, b) => b.size() - a.size());
-    const occluder = new Occluder(-x + w/2,-y + h/2, w, h);
+    const occluder = new Occluder(-x + w / 2, -y + h / 2, w, h);
     const drawnLabels = this._labels.filter((label) => {
       if (label.scale() <= scale / this._scaleMultiplier) {
         return false;
