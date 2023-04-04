@@ -46,6 +46,10 @@ export default class Viewport implements Renderable, InputViewport {
     return this._input.mouse();
   }
 
+  key() {
+    return this._input.key();
+  }
+
   lastMouseX() {
     return this.mouse().lastMouseX();
   }
