@@ -1,11 +1,9 @@
-import WorldTransform from "./WorldTransform";
-import WorldRenderable from "./WorldRenderable";
+import { Renderable } from 'parsegraph-timingbelt';
 import { Projector } from "parsegraph-projector";
 import Method from "parsegraph-method";
 
-export default abstract class AbstractScene implements WorldRenderable {
+export default abstract class AbstractScene implements Renderable {
   private _projector: Projector;
-  private _world: WorldTransform;
   private _onUpdate: Method;
 
   constructor(projector: Projector) {
@@ -29,14 +27,6 @@ export default abstract class AbstractScene implements WorldRenderable {
     this._onUpdate.set(listener, listenerObj);
   }
 
-  setWorldTransform(world: WorldTransform) {
-    this._world = world;
-  }
-
-  worldTransform() {
-    return this._world;
-  }
-
   tick() {
     return false;
   }
@@ -46,10 +36,9 @@ export default abstract class AbstractScene implements WorldRenderable {
   }
 
   render() {
-    const needsUpdate = this.projector().render();
-    this.worldTransform().applyTransform(this.projector());
-    return needsUpdate;
+    return this.projector().render();
   }
 
   unmount() {}
 }
+

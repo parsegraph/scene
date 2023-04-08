@@ -1,15 +1,14 @@
 import { Projector, BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
-import AbstractScene from "./AbstractScene";
-import { WorldLabels } from "./WorldLabel";
 import Color from "parsegraph-color";
-import { InputViewport, Viewport} from "./viewport";
+import Viewport from "../viewport/Viewport";
 
 import Camera, {containsAny} from "parsegraph-camera";
 import {BasicMouseController, KeyController, Keystroke} from "parsegraph-input";
-import ViewportKeyController from "./viewport/key";
-
-const font = "96px sans-serif";
+import KeyTimer from "../input/KeyTimer";
+import AllInputs from "../input/AllInputs";
+import Background from "../viewport/Background";
+import CameraScene from "../CameraScene";
 
 interface TileMap {
   get(x: number, y:number): Tile;
@@ -83,9 +82,7 @@ class BasicTileType implements TileType {
 const SKY = new BasicTileType(new Color(0, 0, 1, 1));
 const GROUND = new BasicTileType(new Color(0.5, 0.5, 0, 1));
 
-class TileScene extends AbstractScene implements TileMap {
-  _camera: Camera;
-
+class TileScene extends CameraScene implements TileMap {
   _tiles: Tile[][];
   _tileSize: number;
 
@@ -94,9 +91,8 @@ class TileScene extends AbstractScene implements TileMap {
   _lastTick: number;
 
   constructor(projector: Projector, tileSize: number, tileWidth: number, tileHeight: number) {
-    super(projector);
+    super(projector, new Camera());
 
-    this._camera = null;
     this._tiles = [];
     this._tileSize = tileSize;
     for(let x = 0; x < tileWidth; ++x) {
@@ -151,10 +147,6 @@ class TileScene extends AbstractScene implements TileMap {
 
   tileHeight() {
     return this._tiles[0].length;
-  }
-
-  camera() {
-    return this._camera;
   }
 
   tileSize() {
@@ -270,38 +262,41 @@ class TileScene extends AbstractScene implements TileMap {
 
     return needsUpdate;
   }
-
-  setCamera(camera: Camera) {
-    this._camera = camera;
-  }
 }
 
-const distance = (ax:number, ay:number, bx:number, by:number) => {
-  return Math.sqrt(
-    Math.pow(bx - ax, 2) + Math.pow(by - ay, 2)
-  );
-}
+class ScrollerKeyController implements KeyController {
+  _map: TileMap;
+  _keys: KeyTimer;
 
-class ScrollerKeyController extends ViewportKeyController {
-  constructor(viewport: InputViewport, map: TileMap) {
-    super(viewport);
+  constructor(map: TileMap) {
     this._map = map;
+    this._keys = new KeyTimer();
   }
+
   map() {
     return this._map;
   }
-  _map: TileMap;
-  update(t: Date) {
-    let needsUpdate = super.update(t);
+
+  keydown(event: Keystroke) {
+    return this._keys.keydown(event);
+  }
+
+  keyup(event: Keystroke) {
+    return this._keys.keyup(event);
+  }
+
+  tick(t: number) {
+    let needsUpdate = false;
     const speed = 2;
-    if (this.getKey("a")) {
-      this.map().movePlayer(-speed * this.keyElapsed("a", t));
+    const keys = this._keys;
+    if (keys.getKey("a")) {
+      this.map().movePlayer(-speed * keys.keyElapsed("a", t));
     }
-    if (this.getKey("d")) {
-      this.map().movePlayer(speed * this.keyElapsed("d", t));
+    if (keys.getKey("d")) {
+      this.map().movePlayer(speed * keys.keyElapsed("d", t));
     }
-    if (this.getKey(" ")) {
-      this.map().jumpPlayer(speed * this.keyElapsed(" ", t));
+    if (keys.getKey(" ")) {
+      this.map().jumpPlayer(speed * keys.keyElapsed(" ", t));
     }
     return needsUpdate;
   }
@@ -319,7 +314,7 @@ class ScrollerMouseController extends BasicMouseController {
     return this._map;
   }
 
-  mousemove(x: number, y: number): boolean {
+  mousemove(_x: number, _y: number): boolean {
     return false;
   }
 
@@ -327,7 +322,7 @@ class ScrollerMouseController extends BasicMouseController {
     return false;
   }
 
-  mousedown(button: any, downStart: number, x: number, y: number) {
+  mousedown(_button: any, _downStart: number, _x: number, _y: number) {
     return false;
   }
 }
@@ -338,16 +333,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const belt = new TimingBelt();
   const proj = new BasicProjector();
   proj.container().tabIndex = 0;
+
+  const inputs = new AllInputs(
+    proj.container(),
+    proj.container()
+  );
+  const viewport = new Viewport(inputs);
+
+  const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
+  viewport.scene().addToFront(bg);
+
   const scene = new TileScene(proj, 100, 256, 64);
-
-  const viewport = new Viewport(new Color(0.2, 0.2, 0.2, 1));
-
   const mouse = new ScrollerMouseController(scene);
-  viewport.mouse().setNext(mouse);
-  const key = new ScrollerKeyController(viewport, scene);
-  viewport.key().setNext(key);
-  viewport.setScene(scene);
-  scene.setCamera(viewport.camera());
+  viewport.mouse().addToFront(mouse);
+  const key = new ScrollerKeyController(scene);
+  viewport.key().addToFront(key);
+  viewport.scene().addToFront(scene);
 
   setInterval(()=>{
     scene.markDirty();

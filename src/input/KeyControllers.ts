@@ -1,7 +1,7 @@
 import { KeyController, Keystroke } from "parsegraph-input";
-import AbstractViewportList from "./AbstractViewportList";
+import AbstractSceneList from "../AbstractSceneList";
 
-export default class ViewportKeyControllers extends AbstractViewportList<KeyController>
+export default class KeyControllers extends AbstractSceneList<KeyController>
 implements KeyController {
 
   protected forEach(iter: (controller: KeyController)=>boolean) {

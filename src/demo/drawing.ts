@@ -1,13 +1,13 @@
 import { Projector, BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
-import AbstractScene from "./AbstractScene";
-import { WorldLabels } from "./WorldLabel";
 import Color from "parsegraph-color";
-import { InputViewport, Viewport } from "./viewport";
 import Camera, {containsAny} from "parsegraph-camera";
 import {BasicMouseController, KeyController, Keystroke} from "parsegraph-input";
 
-const font = "96px sans-serif";
+import Viewport from "../viewport/Viewport";
+import CameraScene from "../CameraScene";
+import AllInputs from "../input/AllInputs";
+import Background from "../viewport/Background";
 
 interface Brush {
   draw(map: TileMap, selectedX: number, selectedY: number, c: Color): void;
@@ -114,16 +114,14 @@ class Tile {
   }
 }
 
-class TileScene extends AbstractScene implements TileMap {
-  _camera: Camera;
+class TileScene extends CameraScene implements TileMap {
 
   _tiles: Tile[][];
   _tileSize: number;
 
   constructor(projector: Projector, tileSize: number, tileWidth: number, tileHeight: number) {
-    super(projector);
+    super(projector, new Camera());
 
-    this._camera = null;
     this._tiles = [];
     this._tileSize = tileSize;
     for(let x = 0; x < tileWidth; ++x) {
@@ -141,10 +139,6 @@ class TileScene extends AbstractScene implements TileMap {
 
   tileHeight() {
     return this._tiles[0].length;
-  }
-
-  camera() {
-    return this._camera;
   }
 
   tileSize() {
@@ -203,10 +197,6 @@ class TileScene extends AbstractScene implements TileMap {
 
     return needsUpdate;
   }
-
-  setCamera(camera: Camera) {
-    this._camera = camera;
-  }
 }
 
 const distance = (ax:number, ay:number, bx:number, by:number) => {
@@ -220,61 +210,21 @@ interface BrushSink {
 }
 
 class ScrollerKeyController implements KeyController {
-  keydowns: { [id: string]: Date };
-  _viewport: InputViewport;
-  _next: KeyController;
-
   _paintBrush: Brush;
   _pencilBrush: Brush;
 
   _sink: BrushSink;
 
-  constructor(sink: BrushSink, viewport: InputViewport) {
+  constructor(sink: BrushSink) {
     // A map of keyName's to a true value.
-    this.keydowns = {};
     this._sink = sink;
-    this._viewport = viewport;
 
     this._paintBrush = new PaintBrush();
     this._pencilBrush = new PencilBrush();
   }
 
-  next() {
-    return this._next;
-  }
-
-  setNext(next: KeyController) {
-    this._next = next;
-  }
-
-  lastMouseX() {
-    return this.viewport().lastMouseX();
-  }
-
-  lastMouseY() {
-    return this.viewport().lastMouseY();
-  }
-
-  getKey(key: string) {
-    return this.keydowns[key] ? 1 : 0;
-  }
-
   sink() {
     return this._sink;
-  }
-
-  keyElapsed(key: string, t: Date) {
-    const v = this.keydowns[key];
-    if (!v) {
-      return 0;
-    }
-    const elapsed = (t.getTime() - v.getTime()) / 1000;
-    this.keydowns[key] = t;
-    return elapsed;
-  }
-
-  scheduleRepaint() {
-    this.viewport().scheduleRepaint();
   }
 
   keydown(event: Keystroke) {
@@ -299,15 +249,7 @@ class ScrollerKeyController implements KeyController {
     return false;
   }
 
-  viewport() {
-    return this._viewport;
-  }
-
-  camera() {
-    return this.viewport().camera();
-  }
-
-  update(_t: Date) {
+  tick(_cycleStart: number) {
     return false;
   }
 }
@@ -396,16 +338,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const belt = new TimingBelt();
   const proj = new BasicProjector();
   proj.container().tabIndex = 0;
-  const scene = new TileScene(proj, 100, 500, 300);
+  const inputs = new AllInputs(
+    proj.container(),
+    proj.container()
+  );
 
-  const viewport = new Viewport(new Color(0.2, 0.2, 0.2, 1));
+  const viewport = new Viewport(inputs);
+  const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
+  viewport.scene().addToBack(bg);
+
+  const scene = new TileScene(proj, 100, 500, 300);
+  viewport.scene().addToFront(scene);
 
   const mouse = new ScrollerMouseController(scene);
-  viewport.mouse().setNext(mouse);
-  const key = new ScrollerKeyController(mouse, viewport);
-  viewport.key().setNext(key);
-  viewport.setScene(scene);
-  scene.setCamera(viewport.camera());
+  viewport.mouse().addToFront(mouse);
+  const key = new ScrollerKeyController(mouse);
+  viewport.key().addToFront(key);
 
   belt.addRenderable(viewport);
   root.appendChild(proj.container());

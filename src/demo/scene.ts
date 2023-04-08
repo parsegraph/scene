@@ -1,23 +1,27 @@
 import { Projector, BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
-import AbstractScene from "./AbstractScene";
-import { WorldLabels } from "./WorldLabel";
+import CameraScene from "../CameraScene";
+import { WorldLabels } from "../WorldLabel";
 import Color from "parsegraph-color";
-import { Viewport } from "./viewport";
+import Viewport from "../viewport/Viewport";
+import Background from "../viewport/Background";
+import AllInputs from "../input/AllInputs";
+import Camera from "parsegraph-camera";
 
 const font = "96px sans-serif";
 
-class Scene extends AbstractScene {
+class Scene extends CameraScene {
   _dom: HTMLElement;
 
   _labels: WorldLabels;
 
   _needsRepaint: boolean;
-  _viewport: Viewport;
+  _worldPos: ()=>[number, number];
 
   constructor(projector: Projector) {
-    super(projector);
+    super(projector, new Camera());
     this._needsRepaint = true;
+    this._worldPos = null;
   }
 
   private createDom() {
@@ -99,20 +103,16 @@ class Scene extends AbstractScene {
     ctx.fillStyle = "white";
     ctx.font = "18px mono";
     ctx.fillText("scale=" + this.worldTransform().scale(), 0, 0);
-    if (this._viewport) {
-      const mouse = this._viewport.mouse();
-
-      const [tx, ty] = this._viewport
-        .camera()
-        .transform(mouse.lastMouseX(), mouse.lastMouseY());
-      ctx.fillText(`mouse=(${tx}, ${ty})`, 0, 16);
+    if (this._worldPos) {
+      const [worldX, worldY] = this._worldPos();
+      ctx.fillText(`mouse=(${worldX}, ${worldY})`, 0, 16);
     }
 
     return needsUpdate;
   }
 
-  setViewport(viewport: Viewport) {
-    this._viewport = viewport;
+  setWorldPos(worldPos: ()=>[number, number]) {
+    this._worldPos = worldPos;
   }
 }
 
@@ -122,11 +122,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const belt = new TimingBelt();
   const proj = new BasicProjector();
   proj.container().tabIndex = 0;
-  const scene = new Scene(proj);
+  const inputs = new AllInputs(
+    proj.container(),
+    proj.container()
+  );
+  const viewport = new Viewport(inputs);
 
-  const viewport = new Viewport(new Color(0.2, 0.2, 0.2, 1));
-  viewport.setScene(scene);
-  scene.setViewport(viewport);
+  const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
+  viewport.scene().addToFront(bg);
+
+  const scene = new Scene(proj);
+  scene.setWorldPos(()=>{
+    const mouseX = viewport.mouse().lastMouseX();
+    const mouseY = viewport.mouse().lastMouseY();
+    return scene.camera().transform(mouseX, mouseY);
+  });
+  viewport.scene().addToFront(scene);
 
   belt.addRenderable(viewport);
   root.appendChild(proj.container());

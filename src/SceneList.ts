@@ -1,8 +1,12 @@
-import WorldRenderable from "../WorldRenderable";
-import WorldTransform from "../WorldTransform";
-import AbstractViewportList from './AbstractViewportList';
+import WorldRenderable from "./WorldRenderable";
+import { Renderable } from "parsegraph-timingbelt";
+import AbstractSceneList from './AbstractSceneList';
 
-export default class ViewportSceneList extends AbstractViewportList<WorldRenderable> implements WorldRenderable {
+export default class SceneList extends AbstractSceneList<Renderable> implements Renderable {
+  constructor() {
+    super();
+  }
+
   protected onItemAdded(scene: WorldRenderable) {
     scene.setOnScheduleUpdate(()=>this.scheduleUpdate());
   }
@@ -21,10 +25,6 @@ export default class ViewportSceneList extends AbstractViewportList<WorldRendera
 
   render(): boolean {
     return this.items().reduce((needsUpdate, scene)=>scene.render() || needsUpdate, false);
-  }
-
-  setWorldTransform(wt: WorldTransform) {
-    this.items().forEach(scene=>scene.setWorldTransform(wt));
   }
 
   unmount(): void {

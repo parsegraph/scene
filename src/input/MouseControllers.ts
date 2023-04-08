@@ -1,8 +1,8 @@
 import { MouseController } from "parsegraph-input";
 
-import AbstractViewportList from "./AbstractViewportList";
+import AbstractSceneList from "../AbstractSceneList";
 
-export default class ViewportMouseControllers extends AbstractViewportList<MouseController> implements MouseController {
+export default class MouseControllers extends AbstractSceneList<MouseController> implements MouseController {
   _focused: boolean;
   _lastMouse: MouseController;
 

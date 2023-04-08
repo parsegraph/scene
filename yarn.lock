@@ -3951,10 +3951,10 @@ parsegraph-gettimeinmillis@^1.4.9:
   resolved "https://registry.yarnpkg.com/parsegraph-gettimeinmillis/-/parsegraph-gettimeinmillis-1.4.9.tgz#2b921d515b1cf767d8a84447e8c7d0376b344d86"
   integrity sha512-az+nImOhRkRJDUyn/QgA5Pgb7aSIeXlHL3i+hBPFxCD9cVRFy99MxKrcqxaRCQqcg2vFtP1GhacbkWx598vwtw==
 
-parsegraph-input@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/parsegraph-input/-/parsegraph-input-2.1.2.tgz#638d3cbf7b5edd173c4ef32df2fd5f613ca86639"
-  integrity sha512-v3B89UwG8FSsO63hn2Y4y7DHnqEBHJpRo7F0xgjS3V/0WE5CN7ycE/Ty92XxOasCNTRAl4091MZI8dOOaHFt0w==
+parsegraph-input@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/parsegraph-input/-/parsegraph-input-2.3.0.tgz#4f76a1a52cca35a3ca173f95b6e6b1c936aeeff7"
+  integrity sha512-aQFua2CFlGz0hWWfrxUQSzJnRRL0rAoUGG9ZL2Tg81o6ls+PSZSbD9HXV4B0pCi9FvFKvoHpe8RA4al72UkXyg==
   dependencies:
     parsegraph-fuzzyequals "^1.4.13"
     parsegraph-matrix "^1.4.16"

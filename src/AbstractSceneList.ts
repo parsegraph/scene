@@ -1,6 +1,6 @@
 import Method from "parsegraph-method";
 
-export default abstract class AbstractViewportList<T> {
+export default abstract class AbstractSceneList<T> {
   _items: T[];
   _update: Method;
 
