@@ -30,11 +30,11 @@ export default class KeyTimer implements KeyController {
 
     if (this._keydowns[event.name()]) {
       // Already processed.
-      return true;
+      return false;
     }
     this._keydowns[event.name()] = Date.now();
 
-    return true;
+    return false;
   }
 
   keyup(event: Keystroke) {
@@ -44,7 +44,7 @@ export default class KeyTimer implements KeyController {
     }
     delete this._keydowns[event.name()];
 
-    return true;
+    return false;
   }
 
   tick() {
