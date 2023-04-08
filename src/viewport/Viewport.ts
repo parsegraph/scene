@@ -10,7 +10,6 @@ export default class Viewport implements Renderable {
   _needsRender: boolean;
   _needsRepaint: boolean;
   _update: Method;
-  _unmount: () => void;
   _scenes: SceneList;
   _inputs: AllInputs;
   _key: KeyControllers;
@@ -40,7 +39,6 @@ export default class Viewport implements Renderable {
     this._renderedMouse = 1;
     this._needsRender = true;
 
-    this._unmount = null;
     this._needsRepaint = true;
   }
 
