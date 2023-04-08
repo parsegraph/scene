@@ -4,9 +4,7 @@ SCRIPT_FILES = \
 	src/SceneList.ts \
 	src/AbstractSceneList.ts \
 	src/index.ts \
-	src/Transformed.ts \
 	src/CameraScene.ts \
-	src/WorldRenderable.ts \
 	src/demo/scroller.ts \
 	src/demo/drawing.ts \
 	src/demo/scene.ts \
