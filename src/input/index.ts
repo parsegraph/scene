@@ -1,11 +1,6 @@
-import AllInputs from './AllInputs';
-import KeyTimer from './KeyTimer';
-import KeyControllers from './KeyControllers';
-import MouseControllers from './MouseControllers';
+import AllInputs from "./AllInputs";
+import KeyTimer from "./KeyTimer";
+import KeyControllers from "./KeyControllers";
+import MouseControllers from "./MouseControllers";
 
-export {
-  AllInputs,
-  KeyControllers,
-  MouseControllers,
-  KeyTimer
-};
+export { AllInputs, KeyControllers, MouseControllers, KeyTimer };

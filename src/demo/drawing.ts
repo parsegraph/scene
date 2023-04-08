@@ -10,7 +10,12 @@ import {
 
 import CameraScene from "../CameraScene";
 import { AllInputs } from "../input";
-import { Viewport, Background, CameraMouseController, CameraKeyController } from "../viewport";
+import {
+  Viewport,
+  Background,
+  CameraMouseController,
+  CameraKeyController,
+} from "../viewport";
 
 interface Brush {
   draw(map: TileMap, selectedX: number, selectedY: number, c: Color): void;

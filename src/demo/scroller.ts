@@ -13,7 +13,7 @@ import KeyTimer from "../input/KeyTimer";
 import AllInputs from "../input/AllInputs";
 import Background from "../viewport/Background";
 import CameraScene from "../CameraScene";
-import {CameraKeyController, CameraMouseController} from "../viewport";
+import { CameraKeyController, CameraMouseController } from "../viewport";
 
 interface TileMap {
   get(x: number, y: number): Tile;
@@ -334,7 +334,7 @@ class ScrollerKeyController implements KeyController {
 
   keydown(event: Keystroke) {
     const rv = this._keys.keydown(event);
-    switch(event.key()) {
+    switch (event.key()) {
       case "a":
       case "d":
       case " ":
