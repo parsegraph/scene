@@ -21,6 +21,7 @@ SCRIPT_FILES = \
 	src/viewport/CameraKeyController.ts \
 	src/viewport/Background.ts \
 	src/WorldTransformScene.ts \
+	src/input/index.ts \
 	src/input/AllInputs.ts \
 	src/input/KeyTimer.ts \
 	src/input/KeyControllers.ts \
