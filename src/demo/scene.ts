@@ -1,12 +1,12 @@
 import { Projector, BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
+import Color from "parsegraph-color";
+import Camera from "parsegraph-camera";
+
 import CameraScene from "../CameraScene";
 import { WorldLabels } from "../WorldLabel";
-import Color from "parsegraph-color";
-import Viewport from "../viewport/Viewport";
-import Background from "../viewport/Background";
-import AllInputs from "../input/AllInputs";
-import Camera from "parsegraph-camera";
+import { Viewport, Background, CameraKeyController, CameraMouseController }  from "../viewport";
+import { AllInputs } from '../input';
 
 const font = "96px sans-serif";
 
@@ -135,6 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return scene.camera().transform(mouseX, mouseY);
   });
   viewport.scene().addToFront(scene);
+
+  viewport.key().addToBack(new CameraKeyController(scene.camera()));
+  viewport.mouse().addToBack(new CameraMouseController(scene.camera()));
 
   belt.addRenderable(viewport);
   root.appendChild(proj.container());
