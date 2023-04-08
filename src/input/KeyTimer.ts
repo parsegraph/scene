@@ -51,4 +51,3 @@ export default class KeyTimer implements KeyController {
     return false;
   }
 }
-

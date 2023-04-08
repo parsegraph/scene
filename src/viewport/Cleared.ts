@@ -1,7 +1,7 @@
-import { Projector } from 'parsegraph-projector';
-import { Renderable } from 'parsegraph-timingbelt';
-import Color from 'parsegraph-color';
-import Method from 'parsegraph-method';
+import { Projector } from "parsegraph-projector";
+import { Renderable } from "parsegraph-timingbelt";
+import Color from "parsegraph-color";
+import Method from "parsegraph-method";
 
 export default class Cleared implements Renderable {
   _proj: Projector;
@@ -24,7 +24,7 @@ export default class Cleared implements Renderable {
     this._update.call();
   }
 
-  setOnScheduleUpdate(update: ()=>void) {
+  setOnScheduleUpdate(update: () => void) {
     this._update.set(update);
   }
 

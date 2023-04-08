@@ -16,7 +16,7 @@ class Scene extends CameraScene {
   _labels: WorldLabels;
 
   _needsRepaint: boolean;
-  _worldPos: ()=>[number, number];
+  _worldPos: () => [number, number];
 
   constructor(projector: Projector) {
     super(projector, new Camera());
@@ -111,7 +111,7 @@ class Scene extends CameraScene {
     return needsUpdate;
   }
 
-  setWorldPos(worldPos: ()=>[number, number]) {
+  setWorldPos(worldPos: () => [number, number]) {
     this._worldPos = worldPos;
   }
 }
@@ -122,17 +122,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const belt = new TimingBelt();
   const proj = new BasicProjector();
   proj.container().tabIndex = 0;
-  const inputs = new AllInputs(
-    proj.container(),
-    proj.container()
-  );
+  const inputs = new AllInputs(proj.container(), proj.container());
   const viewport = new Viewport(inputs);
 
   const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
   viewport.scene().addToFront(bg);
 
   const scene = new Scene(proj);
-  scene.setWorldPos(()=>{
+  scene.setWorldPos(() => {
     const mouseX = viewport.mouse().lastMouseX();
     const mouseY = viewport.mouse().lastMouseY();
     return scene.camera().transform(mouseX, mouseY);

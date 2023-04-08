@@ -1,7 +1,7 @@
-import Camera from 'parsegraph-camera';
-import { Projector } from 'parsegraph-projector';
-import WorldTransformScene from './WorldTransformScene';
-import WorldTransform from './WorldTransform';
+import Camera from "parsegraph-camera";
+import { Projector } from "parsegraph-projector";
+import WorldTransformScene from "./WorldTransformScene";
+import WorldTransform from "./WorldTransform";
 
 export default class CameraScene extends WorldTransformScene {
   _camera: Camera;

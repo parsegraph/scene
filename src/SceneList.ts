@@ -1,14 +1,17 @@
 import WorldRenderable from "./WorldRenderable";
 import { Renderable } from "parsegraph-timingbelt";
-import AbstractSceneList from './AbstractSceneList';
+import AbstractSceneList from "./AbstractSceneList";
 
-export default class SceneList extends AbstractSceneList<Renderable> implements Renderable {
+export default class SceneList
+  extends AbstractSceneList<Renderable>
+  implements Renderable
+{
   constructor() {
     super();
   }
 
   protected onItemAdded(scene: WorldRenderable) {
-    scene.setOnScheduleUpdate(()=>this.scheduleUpdate());
+    scene.setOnScheduleUpdate(() => this.scheduleUpdate());
   }
 
   protected onItemRemoved(scene: WorldRenderable) {
@@ -16,18 +19,28 @@ export default class SceneList extends AbstractSceneList<Renderable> implements 
   }
 
   tick(startDate: number): boolean {
-    return this.items().reduce((needsUpdate, scene)=>scene.tick(startDate) || needsUpdate, false);
+    return this.items().reduce(
+      (needsUpdate, scene) => scene.tick(startDate) || needsUpdate,
+      false
+    );
   }
 
   paint(timeout?: number): boolean {
-    return this.items().reduce((needsUpdate, scene)=>scene.paint(timeout / this.length()) || needsUpdate, false);
+    return this.items().reduce(
+      (needsUpdate, scene) =>
+        scene.paint(timeout / this.length()) || needsUpdate,
+      false
+    );
   }
 
   render(): boolean {
-    return this.items().reduce((needsUpdate, scene)=>scene.render() || needsUpdate, false);
+    return this.items().reduce(
+      (needsUpdate, scene) => scene.render() || needsUpdate,
+      false
+    );
   }
 
   unmount(): void {
-    this.items().forEach(scene=>scene.unmount());
+    this.items().forEach((scene) => scene.unmount());
   }
 }

@@ -5,7 +5,7 @@ import { Renderable } from "parsegraph-timingbelt";
 import SceneList from "../SceneList";
 import KeyControllers from "../input/KeyControllers";
 import MouseControllers from "../input/MouseControllers";
-import AllInputs from '../input/AllInputs';
+import AllInputs from "../input/AllInputs";
 
 export default class Viewport implements Renderable {
   _renderedMouse: number;
@@ -22,17 +22,17 @@ export default class Viewport implements Renderable {
     this._update = new Method();
 
     this._scenes = new SceneList();
-    this._scenes.setOnScheduleUpdate(()=>this.scheduleRepaint());
+    this._scenes.setOnScheduleUpdate(() => this.scheduleRepaint());
 
     this._inputs = inputs;
     this._key = new KeyControllers();
-    this._key.setOnScheduleUpdate(()=>{
+    this._key.setOnScheduleUpdate(() => {
       this.keyChanged();
     });
     inputs.key().setControl(this._key);
 
     this._mouse = new MouseControllers();
-    this._mouse.setOnScheduleUpdate(()=>{
+    this._mouse.setOnScheduleUpdate(() => {
       this.mouseChanged();
     });
     inputs.mouse().setControl(this._mouse);
@@ -97,11 +97,7 @@ export default class Viewport implements Renderable {
   }
 
   needsRender() {
-    return (
-      this.needsRepaint() ||
-      this._needsRender ||
-      this._renderedMouse > 0
-    );
+    return this.needsRepaint() || this._needsRender || this._renderedMouse > 0;
   }
 
   tick(cycleStart: number): boolean {

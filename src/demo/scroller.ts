@@ -3,18 +3,22 @@ import TimingBelt from "parsegraph-timingbelt";
 import Color from "parsegraph-color";
 import Viewport from "../viewport/Viewport";
 
-import Camera, {containsAny} from "parsegraph-camera";
-import {BasicMouseController, KeyController, Keystroke} from "parsegraph-input";
+import Camera, { containsAny } from "parsegraph-camera";
+import {
+  BasicMouseController,
+  KeyController,
+  Keystroke,
+} from "parsegraph-input";
 import KeyTimer from "../input/KeyTimer";
 import AllInputs from "../input/AllInputs";
 import Background from "../viewport/Background";
 import CameraScene from "../CameraScene";
 
 interface TileMap {
-  get(x: number, y:number): Tile;
+  get(x: number, y: number): Tile;
   movePlayer(dx: number): void;
   jumpPlayer(dy: number): void;
-  contains(x: number, y:number): boolean;
+  contains(x: number, y: number): boolean;
   tileSize(): number;
   tileWidth(): number;
   tileHeight(): number;
@@ -90,16 +94,23 @@ class TileScene extends CameraScene implements TileMap {
 
   _lastTick: number;
 
-  constructor(projector: Projector, tileSize: number, tileWidth: number, tileHeight: number) {
+  constructor(
+    projector: Projector,
+    tileSize: number,
+    tileWidth: number,
+    tileHeight: number
+  ) {
     super(projector, new Camera());
 
     this._tiles = [];
     this._tileSize = tileSize;
-    for(let x = 0; x < tileWidth; ++x) {
-      const column:Tile[] = [];
+    for (let x = 0; x < tileWidth; ++x) {
+      const column: Tile[] = [];
       this._tiles.push(column);
-      for(let y = 0; y < tileHeight; ++y) {
-        column.push(new Tile(this, x, y, (x % 5 === 0 || y % 2 === 0) ? SKY : GROUND));
+      for (let y = 0; y < tileHeight; ++y) {
+        column.push(
+          new Tile(this, x, y, x % 5 === 0 || y % 2 === 0 ? SKY : GROUND)
+        );
       }
     }
     this._playerPos = [0, 0];
@@ -114,7 +125,8 @@ class TileScene extends CameraScene implements TileMap {
       }
       this._playerPos[0] += dx;
       if (this.getPlayerForward()?.type() === GROUND) {
-        this._playerPos[0] -= this._playerPos[0] - Math.floor(this._playerPos[0]);
+        this._playerPos[0] -=
+          this._playerPos[0] - Math.floor(this._playerPos[0]);
       }
     }
     if (dx < 0) {
@@ -123,7 +135,8 @@ class TileScene extends CameraScene implements TileMap {
       }
       this._playerPos[0] += dx;
       if (this.getPlayerBackward()?.type() === GROUND) {
-        this._playerPos[0] += Math.ceil(this._playerPos[0]) - this._playerPos[0];
+        this._playerPos[0] +=
+          Math.ceil(this._playerPos[0]) - this._playerPos[0];
       }
     }
     this.markDirty();
@@ -157,44 +170,65 @@ class TileScene extends CameraScene implements TileMap {
     if (px < 0 || py < 0) {
       return false;
     }
-    if (px >= this.tileWidth()  || py >= this.tileHeight()) {
+    if (px >= this.tileWidth() || py >= this.tileHeight()) {
       return false;
     }
     return true;
   }
 
-  get(x: number, y:number) {
+  get(x: number, y: number) {
     return this._tiles[x]?.[y];
   }
 
-  set(x: number, y:number, type: TileType) {
+  set(x: number, y: number, type: TileType) {
     this.get(x, y).setType(type);
     this.scheduleUpdate();
   }
 
   getPlayerCeiling() {
     let d = 0;
-    if (this.get(Math.floor(this._playerPos[0]), Math.floor(this._playerPos[1]))?.type() === SKY) {
+    if (
+      this.get(
+        Math.floor(this._playerPos[0]),
+        Math.floor(this._playerPos[1])
+      )?.type() === SKY
+    ) {
       d += this._playerPos[1] % 1;
     } else {
       return 0;
     }
-    for(let i = 0; (this.get(Math.floor(this._playerPos[0]), Math.floor(this._playerPos[1] - i))?.type() === SKY) ; --i) {
+    for (
+      let i = 0;
+      this.get(
+        Math.floor(this._playerPos[0]),
+        Math.floor(this._playerPos[1] - i)
+      )?.type() === SKY;
+      --i
+    ) {
       d += 1;
     }
     return d;
   }
 
   getPlayerForward() {
-    return this.get(Math.floor(this._playerPos[0]) + 1, Math.floor(this._playerPos[1]));
+    return this.get(
+      Math.floor(this._playerPos[0]) + 1,
+      Math.floor(this._playerPos[1])
+    );
   }
 
   getPlayerBackward() {
-    return this.get(Math.ceil(this._playerPos[0]) - 1, Math.ceil(this._playerPos[1]));
+    return this.get(
+      Math.ceil(this._playerPos[0]) - 1,
+      Math.ceil(this._playerPos[1])
+    );
   }
 
   getPlayerGround() {
-    return this.get(Math.floor(this._playerPos[0]), Math.floor(this._playerPos[1]) + 1);
+    return this.get(
+      Math.floor(this._playerPos[0]),
+      Math.floor(this._playerPos[1]) + 1
+    );
   }
 
   tick() {
@@ -227,17 +261,23 @@ class TileScene extends CameraScene implements TileMap {
     const wt = this.worldTransform();
     const ts = this.tileSize();
 
-    this._tiles.forEach(column => {
-      column.forEach(tile => {
+    this._tiles.forEach((column) => {
+      column.forEach((tile) => {
         const cx = tile.x() * ts;
         const cy = tile.y() * ts;
 
-        if (!containsAny(
-          -wt.x() + wt.width()/2/wt.scale(),
-          -wt.y() + wt.height()/2/wt.scale(),
-          wt.width()/wt.scale(),
-          wt.height()/wt.scale(),
-          cx + ts/2, cy + ts/2, ts, ts)) {
+        if (
+          !containsAny(
+            -wt.x() + wt.width() / 2 / wt.scale(),
+            -wt.y() + wt.height() / 2 / wt.scale(),
+            wt.width() / wt.scale(),
+            wt.height() / wt.scale(),
+            cx + ts / 2,
+            cy + ts / 2,
+            ts,
+            ts
+          )
+        ) {
           return;
         }
         ctx.fillStyle = tile.type().color().asRGBA();
@@ -256,9 +296,23 @@ class TileScene extends CameraScene implements TileMap {
     ctx.fillStyle = "white";
     ctx.fillText(`Player: ${this._playerPos[0]}, ${this._playerPos[1]}`, 0, 0);
     ctx.fillText(`Ceiling: ${this.getPlayerCeiling()}`, 0, 28 * 1);
-    ctx.fillText(`Ground: ${this.getPlayerGround()?.type() === SKY ? "SKY" : "GROUND"}`, 0, 28 * 2);
-    ctx.fillText(`Backward: ${this.getPlayerBackward()?.type() === SKY ? "SKY" : "GROUND"}`, 0, 28 * 3);
-    ctx.fillText(`Forward: ${this.getPlayerForward()?.type() === SKY ? "SKY" : "GROUND"}`, 0, 28 * 4);
+    ctx.fillText(
+      `Ground: ${this.getPlayerGround()?.type() === SKY ? "SKY" : "GROUND"}`,
+      0,
+      28 * 2
+    );
+    ctx.fillText(
+      `Backward: ${
+        this.getPlayerBackward()?.type() === SKY ? "SKY" : "GROUND"
+      }`,
+      0,
+      28 * 3
+    );
+    ctx.fillText(
+      `Forward: ${this.getPlayerForward()?.type() === SKY ? "SKY" : "GROUND"}`,
+      0,
+      28 * 4
+    );
 
     return needsUpdate;
   }
@@ -286,7 +340,7 @@ class ScrollerKeyController implements KeyController {
   }
 
   tick(t: number) {
-    let needsUpdate = false;
+    const needsUpdate = false;
     const speed = 2;
     const keys = this._keys;
     if (keys.getKey("a")) {
@@ -334,10 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const proj = new BasicProjector();
   proj.container().tabIndex = 0;
 
-  const inputs = new AllInputs(
-    proj.container(),
-    proj.container()
-  );
+  const inputs = new AllInputs(proj.container(), proj.container());
   const viewport = new Viewport(inputs);
 
   const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
@@ -350,7 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
   viewport.key().addToFront(key);
   viewport.scene().addToFront(scene);
 
-  setInterval(()=>{
+  setInterval(() => {
     scene.markDirty();
   }, 100);
 

@@ -1,8 +1,12 @@
 import { Projector, BasicProjector } from "parsegraph-projector";
 import TimingBelt from "parsegraph-timingbelt";
 import Color from "parsegraph-color";
-import Camera, {containsAny} from "parsegraph-camera";
-import {BasicMouseController, KeyController, Keystroke} from "parsegraph-input";
+import Camera, { containsAny } from "parsegraph-camera";
+import {
+  BasicMouseController,
+  KeyController,
+  Keystroke,
+} from "parsegraph-input";
 
 import Viewport from "../viewport/Viewport";
 import CameraScene from "../CameraScene";
@@ -26,8 +30,8 @@ class PaintBrush implements Brush {
     map.get(selectedX, selectedY).setColor(c);
 
     const brushSize = this._brushSize;
-    for(let bx = 0; bx < 2 * brushSize; ++bx) {
-      for(let by = 0; by < 2 * brushSize; ++by) {
+    for (let bx = 0; bx < 2 * brushSize; ++bx) {
+      for (let by = 0; by < 2 * brushSize; ++by) {
         const px = selectedX - brushSize + bx;
         const py = selectedY - brushSize + by;
 
@@ -35,8 +39,10 @@ class PaintBrush implements Brush {
           continue;
         }
 
-        const lerp = (distance(selectedX, selectedY, px, py) / brushSize);
-        const mixed = (this._color ?? c).clone().interpolate(map.get(px, py).color(), lerp);
+        const lerp = distance(selectedX, selectedY, px, py) / brushSize;
+        const mixed = (this._color ?? c)
+          .clone()
+          .interpolate(map.get(px, py).color(), lerp);
         map.get(px, py).setColor(mixed);
       }
     }
@@ -54,8 +60,8 @@ class PencilBrush implements Brush {
 
   draw(map: TileMap, selectedX: number, selectedY: number, c: Color): void {
     const brushSize = this._brushSize;
-    for(let bx = 0; bx < 2 * brushSize; ++bx) {
-      for(let by = 0; by < 2 * brushSize; ++by) {
+    for (let bx = 0; bx < 2 * brushSize; ++bx) {
+      for (let by = 0; by < 2 * brushSize; ++by) {
         const px = selectedX - brushSize + bx;
         const py = selectedY - brushSize + by;
 
@@ -70,8 +76,8 @@ class PencilBrush implements Brush {
 }
 
 interface TileMap {
-  get(x: number, y:number): Tile;
-  contains(x: number, y:number): boolean;
+  get(x: number, y: number): Tile;
+  contains(x: number, y: number): boolean;
   tileSize(): number;
   tileWidth(): number;
   tileHeight(): number;
@@ -115,19 +121,23 @@ class Tile {
 }
 
 class TileScene extends CameraScene implements TileMap {
-
   _tiles: Tile[][];
   _tileSize: number;
 
-  constructor(projector: Projector, tileSize: number, tileWidth: number, tileHeight: number) {
+  constructor(
+    projector: Projector,
+    tileSize: number,
+    tileWidth: number,
+    tileHeight: number
+  ) {
     super(projector, new Camera());
 
     this._tiles = [];
     this._tileSize = tileSize;
-    for(let x = 0; x < tileWidth; ++x) {
-      const column:Tile[] = [];
+    for (let x = 0; x < tileWidth; ++x) {
+      const column: Tile[] = [];
       this._tiles.push(column);
-      for(let y = 0; y < tileHeight; ++y) {
+      for (let y = 0; y < tileHeight; ++y) {
         column.push(new Tile(this, x, y));
       }
     }
@@ -149,17 +159,17 @@ class TileScene extends CameraScene implements TileMap {
     if (px < 0 || py < 0) {
       return false;
     }
-    if (px >= this.tileWidth()  || py >= this.tileHeight()) {
+    if (px >= this.tileWidth() || py >= this.tileHeight()) {
       return false;
     }
     return true;
   }
 
-  get(x: number, y:number) {
+  get(x: number, y: number) {
     return this._tiles[x][y];
   }
 
-  set(x: number, y:number, color: Color) {
+  set(x: number, y: number, color: Color) {
     this.get(x, y).setColor(color);
     this.scheduleUpdate();
   }
@@ -176,18 +186,24 @@ class TileScene extends CameraScene implements TileMap {
     const ctx = proj.overlay();
     const wt = this.worldTransform();
 
-    this._tiles.forEach(column => {
-      column.forEach(tile => {
+    this._tiles.forEach((column) => {
+      column.forEach((tile) => {
         const ts = this.tileSize();
         const cx = tile.x() * ts;
         const cy = tile.y() * ts;
 
-        if (!containsAny(
-          -wt.x() + wt.width()/2/wt.scale(),
-          -wt.y() + wt.height()/2/wt.scale(),
-          wt.width()/wt.scale(),
-          wt.height()/wt.scale(),
-          cx + ts/2, cy + ts/2, ts, ts)) {
+        if (
+          !containsAny(
+            -wt.x() + wt.width() / 2 / wt.scale(),
+            -wt.y() + wt.height() / 2 / wt.scale(),
+            wt.width() / wt.scale(),
+            wt.height() / wt.scale(),
+            cx + ts / 2,
+            cy + ts / 2,
+            ts,
+            ts
+          )
+        ) {
           return;
         }
         ctx.fillStyle = tile.color().asRGBA();
@@ -199,11 +215,9 @@ class TileScene extends CameraScene implements TileMap {
   }
 }
 
-const distance = (ax:number, ay:number, bx:number, by:number) => {
-  return Math.sqrt(
-    Math.pow(bx - ax, 2) + Math.pow(by - ay, 2)
-  );
-}
+const distance = (ax: number, ay: number, bx: number, by: number) => {
+  return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
+};
 
 interface BrushSink {
   setBrush(brush: Brush): void;
@@ -228,19 +242,19 @@ class ScrollerKeyController implements KeyController {
   }
 
   keydown(event: Keystroke) {
-    switch(event.key()) {
-    case "1":
-      this.sink().setBrush(this._paintBrush);
-      return true;
-    case "2":
-      this.sink().setBrush(this._pencilBrush);
-      return true;
-    case "3":
-      this.sink().setBrush(new PencilBrush(1, new Color(0, 0, 0, 1)));
-      return true;
-    case "4":
-      this.sink().setBrush(new PaintBrush(8, new Color(1, 1, 1, 1)));
-      return true;
+    switch (event.key()) {
+      case "1":
+        this.sink().setBrush(this._paintBrush);
+        return true;
+      case "2":
+        this.sink().setBrush(this._pencilBrush);
+        return true;
+      case "3":
+        this.sink().setBrush(new PencilBrush(1, new Color(0, 0, 0, 1)));
+        return true;
+      case "4":
+        this.sink().setBrush(new PaintBrush(8, new Color(1, 1, 1, 1)));
+        return true;
     }
     return false;
   }
@@ -290,15 +304,18 @@ class ScrollerMouseController extends BasicMouseController {
     const tw = this.map().tileWidth();
     const th = this.map().tileHeight();
 
-    if (!containsAny(
-      ts * tw/2,
-      ts * th/2,
-      ts * tw,
-      ts * th,
-      worldX,
-      worldY,
-      1,1
-    )) {
+    if (
+      !containsAny(
+        (ts * tw) / 2,
+        (ts * th) / 2,
+        ts * tw,
+        ts * th,
+        worldX,
+        worldY,
+        1,
+        1
+      )
+    ) {
       return false;
     }
 
@@ -338,10 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const belt = new TimingBelt();
   const proj = new BasicProjector();
   proj.container().tabIndex = 0;
-  const inputs = new AllInputs(
-    proj.container(),
-    proj.container()
-  );
+  const inputs = new AllInputs(proj.container(), proj.container());
 
   const viewport = new Viewport(inputs);
   const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));

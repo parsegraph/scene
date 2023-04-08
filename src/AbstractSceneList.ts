@@ -46,7 +46,7 @@ export default abstract class AbstractSceneList<T> {
       return;
     }
     const oldLen = this._items.length;
-    this._items = this._items.filter(item=>item !== itemToRemove);
+    this._items = this._items.filter((item) => item !== itemToRemove);
     if (this._items.length < oldLen) {
       this.onItemRemoved(itemToRemove);
     }

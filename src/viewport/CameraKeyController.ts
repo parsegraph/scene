@@ -1,9 +1,18 @@
 import Camera from "parsegraph-camera";
 import { Keystroke, MouseController } from "parsegraph-input";
 import { KeyController } from "parsegraph-input";
-import { MIN_CAMERA_SCALE, RESET_CAMERA_KEY, MOVE_BACKWARD_KEY, MOVE_FORWARD_KEY, MOVE_UPWARD_KEY, MOVE_DOWNWARD_KEY, ZOOM_IN_KEY, ZOOM_OUT_KEY } from "./constants";
-import Method from 'parsegraph-method';
-import KeyTimer from './KeyTimer';
+import {
+  MIN_CAMERA_SCALE,
+  RESET_CAMERA_KEY,
+  MOVE_BACKWARD_KEY,
+  MOVE_FORWARD_KEY,
+  MOVE_UPWARD_KEY,
+  MOVE_DOWNWARD_KEY,
+  ZOOM_IN_KEY,
+  ZOOM_OUT_KEY,
+} from "./constants";
+import Method from "parsegraph-method";
+import KeyTimer from "./KeyTimer";
 
 export default class CameraKeyController implements KeyController {
   _camera: Camera;
@@ -30,7 +39,7 @@ export default class CameraKeyController implements KeyController {
     this._update.call();
   }
 
-  setOnScheduleUpdate(update: ()=>void) {
+  setOnScheduleUpdate(update: () => void) {
     this._update.set(update);
   }
 

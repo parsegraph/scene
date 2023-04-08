@@ -1,14 +1,17 @@
-import { Projector } from 'parsegraph-projector';
-import { Renderable } from 'parsegraph-timingbelt';
-import Color from 'parsegraph-color';
-import Method from 'parsegraph-method';
+import { Projector } from "parsegraph-projector";
+import { Renderable } from "parsegraph-timingbelt";
+import Color from "parsegraph-color";
+import Method from "parsegraph-method";
 
 export default class Background implements Renderable {
   _proj: Projector;
   _backgroundColor: Color;
   _update: Method;
 
-  constructor(proj: Projector, backgroundColor: Color = new Color(149 / 255, 149 / 255, 149 / 255, 1)) {
+  constructor(
+    proj: Projector,
+    backgroundColor: Color = new Color(149 / 255, 149 / 255, 149 / 255, 1)
+  ) {
     this._proj = proj;
     this._backgroundColor = backgroundColor;
     this._update = new Method();
@@ -35,7 +38,7 @@ export default class Background implements Renderable {
     this._update.call();
   }
 
-  setOnScheduleUpdate(update: ()=>void) {
+  setOnScheduleUpdate(update: () => void) {
     this._update.set(update);
   }
 

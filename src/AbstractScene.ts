@@ -1,4 +1,4 @@
-import { Renderable } from 'parsegraph-timingbelt';
+import { Renderable } from "parsegraph-timingbelt";
 import { Projector } from "parsegraph-projector";
 import Method from "parsegraph-method";
 
@@ -41,4 +41,3 @@ export default abstract class AbstractScene implements Renderable {
 
   unmount() {}
 }
-

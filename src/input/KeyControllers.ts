@@ -1,11 +1,12 @@
 import { KeyController, Keystroke } from "parsegraph-input";
 import AbstractSceneList from "../AbstractSceneList";
 
-export default class KeyControllers extends AbstractSceneList<KeyController>
-implements KeyController {
-
-  protected forEach(iter: (controller: KeyController)=>boolean) {
-    for(let i = 0; i < this.items().length; ++i) {
+export default class KeyControllers
+  extends AbstractSceneList<KeyController>
+  implements KeyController
+{
+  protected forEach(iter: (controller: KeyController) => boolean) {
+    for (let i = 0; i < this.items().length; ++i) {
       const controller = this.items()[this.items().length - 1 - i];
       if (iter(controller)) {
         this.scheduleUpdate();
@@ -16,14 +17,17 @@ implements KeyController {
   }
 
   keydown(event: Keystroke) {
-    return this.forEach(controller=>controller.keydown(event));
+    return this.forEach((controller) => controller.keydown(event));
   }
 
   keyup(event: Keystroke) {
-    return this.forEach(controller=>controller.keyup(event));
+    return this.forEach((controller) => controller.keyup(event));
   }
 
   tick(cycleStart: number) {
-    return this.items().reduce((needsUpdate, controller)=>controller.tick(cycleStart) || needsUpdate, false);
+    return this.items().reduce(
+      (needsUpdate, controller) => controller.tick(cycleStart) || needsUpdate,
+      false
+    );
   }
 }

@@ -2,8 +2,8 @@ import { makeInverse3x3, matrixTransform2D } from "parsegraph-matrix";
 import { BasicMouseController } from "parsegraph-input";
 
 import { MIN_CAMERA_SCALE } from "./constants";
-import Method from 'parsegraph-method';
-import Camera from 'parsegraph-camera';
+import Method from "parsegraph-method";
+import Camera from "parsegraph-camera";
 
 export default class CameraMouseController extends BasicMouseController {
   _dragging: boolean;
@@ -21,7 +21,7 @@ export default class CameraMouseController extends BasicMouseController {
     this._update.call();
   }
 
-  setOnScheduleUpdate(update: ()=>void) {
+  setOnScheduleUpdate(update: () => void) {
     this._update.set(update);
   }
 

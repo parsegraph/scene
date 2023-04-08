@@ -1,6 +1,6 @@
 import WorldTransform from "./WorldTransform";
 import { Projector } from "parsegraph-projector";
-import AbstractScene from './AbstractScene';
+import AbstractScene from "./AbstractScene";
 
 export default abstract class WorldTransformScene extends AbstractScene {
   private _world: WorldTransform;

@@ -2,7 +2,10 @@ import { MouseController } from "parsegraph-input";
 
 import AbstractSceneList from "../AbstractSceneList";
 
-export default class MouseControllers extends AbstractSceneList<MouseController> implements MouseController {
+export default class MouseControllers
+  extends AbstractSceneList<MouseController>
+  implements MouseController
+{
   _focused: boolean;
   _lastMouse: MouseController;
 
@@ -26,8 +29,8 @@ export default class MouseControllers extends AbstractSceneList<MouseController>
     }
   }
 
-  protected forEach(iter: (controller: MouseController)=>boolean) {
-    for(let i = 0; i < this.items().length; ++i) {
+  protected forEach(iter: (controller: MouseController) => boolean) {
+    for (let i = 0; i < this.items().length; ++i) {
       const controller = this.items()[this.items().length - 1 - i];
       if (iter(controller)) {
         this._lastMouse = controller;
@@ -39,17 +42,20 @@ export default class MouseControllers extends AbstractSceneList<MouseController>
   }
 
   tick(cycleStart: number) {
-    return this.items().reduce((needsUpdate, controller)=>controller.tick(cycleStart) || needsUpdate, false);
+    return this.items().reduce(
+      (needsUpdate, controller) => controller.tick(cycleStart) || needsUpdate,
+      false
+    );
   }
 
   blur() {
     this._focused = false;
-    this.items().forEach(controller=>controller.blur());
+    this.items().forEach((controller) => controller.blur());
   }
 
   focus() {
     this._focused = true;
-    this.items().forEach(controller=>controller.focus());
+    this.items().forEach((controller) => controller.focus());
   }
 
   focused() {
@@ -57,18 +63,22 @@ export default class MouseControllers extends AbstractSceneList<MouseController>
   }
 
   mousedown(button: any, downTime: number, x: number, y: number): boolean {
-    return this.forEach(controller=>controller.mousedown(button, downTime, x, y));
+    return this.forEach((controller) =>
+      controller.mousedown(button, downTime, x, y)
+    );
   }
 
   mousemove(x: number, y: number): boolean {
-    return this.forEach(controller=>controller.mousemove(x, y));
+    return this.forEach((controller) => controller.mousemove(x, y));
   }
 
   mouseup(button: any, downTime: number, x: number, y: number) {
-    return this.forEach(controller=>controller.mouseup(button, downTime, x, y));
+    return this.forEach((controller) =>
+      controller.mouseup(button, downTime, x, y)
+    );
   }
 
   wheel(mag: number, x: number, y: number): boolean {
-    return this.forEach(controller=>controller.wheel(mag, x, y));
+    return this.forEach((controller) => controller.wheel(mag, x, y));
   }
 }
