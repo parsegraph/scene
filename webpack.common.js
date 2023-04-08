@@ -4,7 +4,8 @@ const { readFileSync } = require("fs");
 
 const DIST_NAME = "scene";
 
-const relDir = (...pathFrags)=>path.resolve(__dirname, ...pathFrags);
+console.log(process.cwd());
+const relDir = (...pathFrags)=>path.resolve(process.cwd(), ...pathFrags);
 
 const hasFiles = (extension)=>{
   const rv = execSync(`find ${relDir("src")} -type f -name '*.${extension}'`);
