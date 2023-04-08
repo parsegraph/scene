@@ -1,4 +1,3 @@
-import WorldRenderable from "./WorldRenderable";
 import { Renderable } from "parsegraph-timingbelt";
 import AbstractSceneList from "./AbstractSceneList";
 
@@ -10,11 +9,11 @@ export default class SceneList
     super();
   }
 
-  protected onItemAdded(scene: WorldRenderable) {
+  protected onItemAdded(scene: Renderable) {
     scene.setOnScheduleUpdate(() => this.scheduleUpdate());
   }
 
-  protected onItemRemoved(scene: WorldRenderable) {
+  protected onItemRemoved(scene: Renderable) {
     scene.setOnScheduleUpdate(null);
   }
 
