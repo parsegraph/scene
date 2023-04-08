@@ -1,6 +1,8 @@
 import Camera from "parsegraph-camera";
 import { Keystroke, MouseController } from "parsegraph-input";
 import { KeyController } from "parsegraph-input";
+import Method from "parsegraph-method";
+
 import {
   MIN_CAMERA_SCALE,
   RESET_CAMERA_KEY,
@@ -11,8 +13,7 @@ import {
   ZOOM_IN_KEY,
   ZOOM_OUT_KEY,
 } from "./constants";
-import Method from "parsegraph-method";
-import KeyTimer from "./KeyTimer";
+import { KeyTimer } from "../input";
 
 export default class CameraKeyController implements KeyController {
   _camera: Camera;

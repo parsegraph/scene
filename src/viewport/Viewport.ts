@@ -3,9 +3,7 @@ import log, { logc } from "parsegraph-log";
 import { Renderable } from "parsegraph-timingbelt";
 
 import SceneList from "../SceneList";
-import KeyControllers from "../input/KeyControllers";
-import MouseControllers from "../input/MouseControllers";
-import AllInputs from "../input/AllInputs";
+import { KeyControllers, MouseControllers, AllInputs } from "../input";
 
 export default class Viewport implements Renderable {
   _renderedMouse: number;
