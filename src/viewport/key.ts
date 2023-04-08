@@ -1,6 +1,8 @@
-import { Keystroke } from "parsegraph-input";
+import Camera from "parsegraph-camera";
+import { Keystroke, MouseController } from "parsegraph-input";
 import { KeyController } from "parsegraph-input";
-import InputViewport, { MIN_CAMERA_SCALE } from "./InputViewport";
+import { MIN_CAMERA_SCALE } from "./InputViewport";
+import Method from 'parsegraph-method';
 
 const RESET_CAMERA_KEY = "Escape";
 
@@ -13,55 +15,71 @@ const ZOOM_IN_KEY = "ZoomIn";
 const ZOOM_OUT_KEY = "ZoomOut";
 
 export default class ViewportKeyController implements KeyController {
-  keydowns: { [id: string]: Date };
-  _viewport: InputViewport;
-  _next: KeyController;
+  keydowns: { [id: string]: number };
+  _camera: Camera;
+  _mouse: MouseController;
+  _update: Method;
 
-  constructor(viewport: InputViewport) {
+  constructor(camera: Camera, mouse?: MouseController) {
     // A map of keyName's to a true value.
     this.keydowns = {};
-    this._viewport = viewport;
-  }
-
-  next() {
-    return this._next;
-  }
-
-  setNext(next: KeyController) {
-    this._next = next;
+    this._camera = camera;
+    this._mouse = mouse;
+    this._update = new Method();
   }
 
   lastMouseX() {
-    return this.viewport().lastMouseX();
+    return this._mouse?.lastMouseX();
   }
 
   lastMouseY() {
-    return this.viewport().lastMouseY();
+    return this._mouse?.lastMouseY();
   }
 
   getKey(key: string) {
     return this.keydowns[key] ? 1 : 0;
   }
 
-  keyElapsed(key: string, t: Date) {
+  keyElapsed(key: string, cycleStart: number) {
     const v = this.keydowns[key];
     if (!v) {
       return 0;
     }
-    const elapsed = (t.getTime() - v.getTime()) / 1000;
-    this.keydowns[key] = t;
+    const elapsed = (cycleStart - v) / 1000;
+    this.keydowns[key] = cycleStart;
     return elapsed;
   }
 
-  scheduleRepaint() {
-    this.viewport().scheduleRepaint();
+  scheduleUpdate() {
+    this._update.call();
+  }
+
+  setOnScheduleUpdate(update: ()=>void) {
+    this._update.set(update);
+  }
+
+  resetCamera(complete?: boolean) {
+    const defaultScale = 0.25;
+    const cam = this.camera();
+    if (!cam.canProject()) {
+      return;
+    }
+    let x = cam.width() / 2;
+    let y = cam.height() / 2;
+    if (!complete && cam.x() === x && cam.y() === y) {
+      cam.setScale(defaultScale);
+    } else {
+      if (complete) {
+        cam.setScale(defaultScale);
+      }
+      x = cam.width() / (2 * defaultScale);
+      y = cam.height() / (2 * defaultScale);
+      cam.setOrigin(x, y);
+    }
+    this.scheduleUpdate();
   }
 
   keydown(event: Keystroke) {
-    if (this.next()?.keydown(event)) {
-      return true;
-    }
-
     if (!event.name().length) {
       return false;
     }
@@ -70,16 +88,12 @@ export default class ViewportKeyController implements KeyController {
       // Already processed.
       return true;
     }
-    this.keydowns[event.name()] = new Date();
+    this.keydowns[event.name()] = Date.now();
 
     return true;
   }
 
   keyup(event: Keystroke) {
-    if (this.next()?.keyup(event)) {
-      return true;
-    }
-
     if (!this.keydowns[event.name()]) {
       // Already processed.
       return false;
@@ -89,24 +103,20 @@ export default class ViewportKeyController implements KeyController {
     return true;
   }
 
-  viewport() {
-    return this._viewport;
-  }
-
   camera() {
-    return this.viewport().camera();
+    return this._camera;
   }
 
-  update(t: Date) {
+  tick(t: number) {
     const cam = this.camera();
     const xSpeed = 1000 / cam.scale();
     const ySpeed = 1000 / cam.scale();
     const scaleSpeed = 20;
 
-    let needsUpdate = this.next()?.update(t);
+    let needsUpdate = false;
 
     if (this.getKey(RESET_CAMERA_KEY)) {
-      this.viewport().resetCamera(false);
+      this.resetCamera(false);
       needsUpdate = true;
     }
 
@@ -153,3 +163,4 @@ export default class ViewportKeyController implements KeyController {
     return needsUpdate;
   }
 }
+

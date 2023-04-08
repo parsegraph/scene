@@ -1,89 +1,60 @@
 import { makeInverse3x3, matrixTransform2D } from "parsegraph-matrix";
-import { BasicMouseController, MouseController } from "parsegraph-input";
-import { logc } from "parsegraph-log";
+import { BasicMouseController } from "parsegraph-input";
 
-import InputViewport, { MIN_CAMERA_SCALE } from "./InputViewport";
+import { MIN_CAMERA_SCALE } from "./InputViewport";
+import Method from 'parsegraph-method';
+import Camera from 'parsegraph-camera';
 
 export default class ViewportMouseController extends BasicMouseController {
   _dragging: boolean;
-  _mouseVersion: number;
-  _viewport: InputViewport;
-  _next: MouseController;
+  _update: Method;
+  _camera: Camera;
 
-  constructor(viewport: InputViewport) {
+  constructor(camera: Camera) {
     super();
-    this._mouseVersion = 0;
-    this._next = null;
-    this._viewport = viewport;
+    this._camera = camera;
     this._dragging = false;
+    this._update = new Method();
   }
 
-  viewport() {
-    return this._viewport;
+  scheduleUpdate() {
+    this._update.call();
   }
 
-  scheduleRepaint() {
-    this.viewport().scheduleRepaint();
+  setOnScheduleUpdate(update: ()=>void) {
+    this._update.set(update);
   }
 
-  mouseVersion() {
-    return this._mouseVersion;
+  tick() {
+    return false;
   }
 
-  mouseChanged() {
-    ++this._mouseVersion;
-  }
-
-  update(t: Date) {
-    let needsUpdate = this.next()?.update(t);
-    needsUpdate =
-      needsUpdate || this.viewport().mouseVersion() !== this.mouseVersion();
-    if (needsUpdate) {
-      logc("Schedule updates", "Mouse needs update");
-    }
-    return needsUpdate;
-  }
-
-  next() {
-    return this._next;
-  }
-
-  setNext(next: MouseController) {
-    this._next = next;
+  camera() {
+    return this._camera;
   }
 
   mouseDrag(_: number, _2: number, dx: number, dy: number) {
-    this.mouseChanged();
-    const camera = this.viewport().camera();
+    const camera = this.camera();
     // console.log("Adjust orig", dx, dx / camera.scale(), dy / camera.scale());
     camera.adjustOrigin(dx / camera.scale(), dy / camera.scale());
-    this.scheduleRepaint();
+    this.scheduleUpdate();
     return true;
   }
 
   mousedown(button: any, downTime: number, x: number, y: number): boolean {
-    if (this.next()?.mousedown(button, downTime, x, y)) {
-      return true;
-    }
-
     super.mousedown(button, downTime, x, y);
 
     const mouseInWorld = matrixTransform2D(
-      makeInverse3x3(this.viewport().camera().worldMatrix()),
+      makeInverse3x3(this.camera().worldMatrix()),
       x,
       y
     );
 
     this._dragging = true;
-    this.mouseDrag(mouseInWorld[0], mouseInWorld[1], 0, 0);
-    return true;
+    return this.mouseDrag(mouseInWorld[0], mouseInWorld[1], 0, 0);
   }
 
   mousemove(x: number, y: number): boolean {
-    if (this.next()?.mousemove(x, y)) {
-      return true;
-    }
-
     const dx = x - this.lastMouseX();
     const dy = y - this.lastMouseY();
     super.mousemove(x, y);
@@ -91,43 +62,34 @@ export default class ViewportMouseController extends BasicMouseController {
     // Moving during a mousedown i.e. dragging (or zooming)
     if (this._dragging && !isNaN(dx) && !isNaN(dy)) {
       const mouseInWorld = matrixTransform2D(
-        makeInverse3x3(this.viewport().camera().worldMatrix()),
+        makeInverse3x3(this.camera().worldMatrix()),
         x,
         y
       );
       return this.mouseDrag(mouseInWorld[0], mouseInWorld[1], dx, dy);
     }
 
-    this.mouseChanged();
-    return true;
+    return false;
   }
 
   mouseup(button: any, downTime: number, x: number, y: number) {
-    if (this.next()?.mouseup(button, downTime, x, y)) {
-      return true;
-    }
-
     super.mouseup(button, downTime, x, y);
     this._dragging = false;
     return false;
   }
 
   wheel(mag: number, x: number, y: number): boolean {
-    if (this.next()?.wheel(mag, x, y)) {
-      return true;
-    }
-
     super.wheel(mag, x, y);
 
     // Adjust the scale.
     const numSteps = mag > 0 ? -1 : 1;
-    const camera = this.viewport().camera();
+    const camera = this.camera();
     if (numSteps > 0 || camera.scale() >= MIN_CAMERA_SCALE) {
       // console.log("Zooming to", x, y, camera.transform(x, y), camera.scale());
       camera.zoomToPoint(Math.pow(1.1, numSteps), x, y);
+      this.scheduleUpdate();
+      return true;
     }
-    this.mouseChanged();
-    this.scheduleRepaint();
-    return true;
+    return false;
   }
 }
