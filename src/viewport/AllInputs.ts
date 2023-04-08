@@ -3,7 +3,7 @@ import { FocusInput, TouchInput, MouseInput, KeyInput } from "parsegraph-input";
 export const TOUCH_SENSITIVITY = 1;
 export const MOUSE_SENSITIVITY = 1;
 
-export default class ViewportInput {
+export default class AllInputs {
   _mainContainer: HTMLElement;
   _domContainer: HTMLElement;
 

@@ -1,11 +1,11 @@
 import { makeInverse3x3, matrixTransform2D } from "parsegraph-matrix";
 import { BasicMouseController } from "parsegraph-input";
 
-import { MIN_CAMERA_SCALE } from "./InputViewport";
+import { MIN_CAMERA_SCALE } from "./constants";
 import Method from 'parsegraph-method';
 import Camera from 'parsegraph-camera';
 
-export default class ViewportMouseController extends BasicMouseController {
+export default class CameraMouseController extends BasicMouseController {
   _dragging: boolean;
   _update: Method;
   _camera: Camera;
@@ -33,7 +33,7 @@ export default class ViewportMouseController extends BasicMouseController {
     return this._camera;
   }
 
-  mouseDrag(_: number, _2: number, dx: number, dy: number) {
+  mouseDrag(_x: number, _y: number, dx: number, dy: number) {
     const camera = this.camera();
     // console.log("Adjust orig", dx, dx / camera.scale(), dy / camera.scale());
     camera.adjustOrigin(dx / camera.scale(), dy / camera.scale());

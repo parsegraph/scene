@@ -1,6 +1,5 @@
-import InputViewport from "./InputViewport";
-import ViewportInputController from "./input";
-import Viewport from "./viewport";
+import ViewportInput from "./ViewportInput";
+import Viewport from "./Viewport";
 import ViewportMouseController from "./mouse";
 import ViewportKeyController from "./mouse";
 
@@ -8,6 +7,5 @@ export {
   Viewport,
   ViewportMouseController,
   ViewportKeyController,
-  ViewportInputController,
-  InputViewport,
+  ViewportInput,
 };

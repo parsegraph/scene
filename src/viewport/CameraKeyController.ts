@@ -1,31 +1,21 @@
 import Camera from "parsegraph-camera";
 import { Keystroke, MouseController } from "parsegraph-input";
 import { KeyController } from "parsegraph-input";
-import { MIN_CAMERA_SCALE } from "./InputViewport";
+import { MIN_CAMERA_SCALE, RESET_CAMERA_KEY, MOVE_BACKWARD_KEY, MOVE_FORWARD_KEY, MOVE_UPWARD_KEY, MOVE_DOWNWARD_KEY, ZOOM_IN_KEY, ZOOM_OUT_KEY } from "./constants";
 import Method from 'parsegraph-method';
+import KeyTimer from './KeyTimer';
 
-const RESET_CAMERA_KEY = "Escape";
-
-const MOVE_UPWARD_KEY = "ArrowUp";
-const MOVE_DOWNWARD_KEY = "ArrowDown";
-const MOVE_BACKWARD_KEY = "ArrowLeft";
-const MOVE_FORWARD_KEY = "ArrowRight";
-
-const ZOOM_IN_KEY = "ZoomIn";
-const ZOOM_OUT_KEY = "ZoomOut";
-
-export default class ViewportKeyController implements KeyController {
-  keydowns: { [id: string]: number };
+export default class CameraKeyController implements KeyController {
   _camera: Camera;
   _mouse: MouseController;
   _update: Method;
+  _keys: KeyTimer;
 
   constructor(camera: Camera, mouse?: MouseController) {
-    // A map of keyName's to a true value.
-    this.keydowns = {};
     this._camera = camera;
     this._mouse = mouse;
     this._update = new Method();
+    this._keys = new KeyTimer();
   }
 
   lastMouseX() {
@@ -34,20 +24,6 @@ export default class ViewportKeyController implements KeyController {
 
   lastMouseY() {
     return this._mouse?.lastMouseY();
-  }
-
-  getKey(key: string) {
-    return this.keydowns[key] ? 1 : 0;
-  }
-
-  keyElapsed(key: string, cycleStart: number) {
-    const v = this.keydowns[key];
-    if (!v) {
-      return 0;
-    }
-    const elapsed = (cycleStart - v) / 1000;
-    this.keydowns[key] = cycleStart;
-    return elapsed;
   }
 
   scheduleUpdate() {
@@ -79,28 +55,16 @@ export default class ViewportKeyController implements KeyController {
     this.scheduleUpdate();
   }
 
+  keys() {
+    return this._keys;
+  }
+
   keydown(event: Keystroke) {
-    if (!event.name().length) {
-      return false;
-    }
-
-    if (this.keydowns[event.name()]) {
-      // Already processed.
-      return true;
-    }
-    this.keydowns[event.name()] = Date.now();
-
-    return true;
+    return this.keys().keydown(event);
   }
 
   keyup(event: Keystroke) {
-    if (!this.keydowns[event.name()]) {
-      // Already processed.
-      return false;
-    }
-    delete this.keydowns[event.name()];
-
-    return true;
+    return this.keys().keyup(event);
   }
 
   camera() {
@@ -115,45 +79,46 @@ export default class ViewportKeyController implements KeyController {
 
     let needsUpdate = false;
 
-    if (this.getKey(RESET_CAMERA_KEY)) {
+    const keys = this.keys();
+    if (keys.getKey(RESET_CAMERA_KEY)) {
       this.resetCamera(false);
       needsUpdate = true;
     }
 
     if (
-      this.getKey(MOVE_BACKWARD_KEY) ||
-      this.getKey(MOVE_FORWARD_KEY) ||
-      this.getKey(MOVE_UPWARD_KEY) ||
-      this.getKey(MOVE_DOWNWARD_KEY)
+      keys.getKey(MOVE_BACKWARD_KEY) ||
+      keys.getKey(MOVE_FORWARD_KEY) ||
+      keys.getKey(MOVE_UPWARD_KEY) ||
+      keys.getKey(MOVE_DOWNWARD_KEY)
     ) {
       // console.log("Moving");
       const x =
         cam.x() +
-        (this.keyElapsed(MOVE_BACKWARD_KEY, t) * xSpeed +
-          this.keyElapsed(MOVE_FORWARD_KEY, t) * -xSpeed);
+        (keys.keyElapsed(MOVE_BACKWARD_KEY, t) * xSpeed +
+          keys.keyElapsed(MOVE_FORWARD_KEY, t) * -xSpeed);
       const y =
         cam.y() +
-        (this.keyElapsed(MOVE_UPWARD_KEY, t) * ySpeed +
-          this.keyElapsed(MOVE_DOWNWARD_KEY, t) * -ySpeed);
+        (keys.keyElapsed(MOVE_UPWARD_KEY, t) * ySpeed +
+          keys.keyElapsed(MOVE_DOWNWARD_KEY, t) * -ySpeed);
       cam.setOrigin(x, y);
       needsUpdate = true;
     }
 
-    if (this.getKey(ZOOM_OUT_KEY)) {
+    if (keys.getKey(ZOOM_OUT_KEY)) {
       // console.log("Continuing to zoom out");
       needsUpdate = true;
       cam.zoomToPoint(
-        Math.pow(1.1, scaleSpeed * this.keyElapsed(ZOOM_OUT_KEY, t)),
+        Math.pow(1.1, scaleSpeed * keys.keyElapsed(ZOOM_OUT_KEY, t)),
         cam.width() / 2,
         cam.height() / 2
       );
     }
-    if (this.getKey(ZOOM_IN_KEY)) {
+    if (keys.getKey(ZOOM_IN_KEY)) {
       // console.log("Continuing to zoom in");
       needsUpdate = true;
       if (cam.scale() >= MIN_CAMERA_SCALE) {
         cam.zoomToPoint(
-          Math.pow(1.1, -scaleSpeed * this.keyElapsed(ZOOM_IN_KEY, t)),
+          Math.pow(1.1, -scaleSpeed * keys.keyElapsed(ZOOM_IN_KEY, t)),
           cam.width() / 2,
           cam.height() / 2
         );
@@ -163,4 +128,3 @@ export default class ViewportKeyController implements KeyController {
     return needsUpdate;
   }
 }
-

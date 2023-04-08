@@ -1,16 +1,14 @@
 import Camera from "parsegraph-camera";
 import { BasicProjector, Projector } from "parsegraph-projector";
 import Method from "parsegraph-method";
-import Color from "parsegraph-color";
 import log, { logc } from "parsegraph-log";
-import WorldRenderable from "../WorldRenderable";
 import { Renderable } from "parsegraph-timingbelt";
 
 import WorldTransform from "../WorldTransform";
-import ViewportSceneList from "./scenes";
-import ViewportKeyControllers from "./ViewportKeyControllers";
-import ViewportMouseControllers from "./ViewportMouseControllers";
-import ViewportInput from './input';
+import ViewportSceneList from "./ViewportSceneList";
+import KeyControllers from "./KeyControllers";
+import MouseControllers from "./MouseControllers";
+import AllInputs from './AllInputs';
 
 export default class Viewport implements Renderable {
   _camera: Camera;
@@ -22,9 +20,9 @@ export default class Viewport implements Renderable {
   _unmount: () => void;
   _scenes: ViewportSceneList;
   _proj: Projector;
-  _input: ViewportInput;
-  _key: ViewportKeyControllers;
-  _mouse: ViewportMouseControllers;
+  _input: AllInputs;
+  _key: KeyControllers;
+  _mouse: MouseControllers;
 
   constructor(proj: Projector) {
     this._proj = proj;
@@ -36,11 +34,11 @@ export default class Viewport implements Renderable {
     this._update = new Method();
     this._camera = new Camera();
 
-    this._key = new ViewportKeyControllers();
+    this._key = new KeyControllers();
     this._key.setOnScheduleUpdate(()=>{
       this.keyChanged();
     });
-    this._mouse = new ViewportMouseControllers();
+    this._mouse = new MouseControllers();
     this._mouse.setOnScheduleUpdate(()=>{
       this.mouseChanged();
     });
@@ -171,7 +169,7 @@ export default class Viewport implements Renderable {
     let needsUpdate = false;
     if (!this._input) {
       const projector = this.projector();
-      const input = new ViewportInput(
+      const input = new AllInputs(
         projector.glProvider().container(),
         projector.glProvider().container()
       );
