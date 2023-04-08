@@ -8,10 +8,9 @@ import {
   Keystroke,
 } from "parsegraph-input";
 
-import Viewport from "../viewport/Viewport";
 import CameraScene from "../CameraScene";
-import AllInputs from "../input/AllInputs";
-import Background from "../viewport/Background";
+import { AllInputs } from "../input";
+import { Viewport, Background, CameraMouseController, CameraKeyController } from "../viewport";
 
 interface Brush {
   draw(map: TileMap, selectedX: number, selectedY: number, c: Color): void;
@@ -175,6 +174,7 @@ class TileScene extends CameraScene implements TileMap {
   }
 
   paint() {
+    this.projector().overlay();
     const needsUpdate = super.paint();
     return needsUpdate;
   }
@@ -354,8 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const belt = new TimingBelt();
   const proj = new BasicProjector();
-  proj.container().tabIndex = 0;
-  const inputs = new AllInputs(proj.container(), proj.container());
+  const inputs = new AllInputs(proj.container());
 
   const viewport = new Viewport(inputs);
   const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
@@ -365,9 +364,13 @@ document.addEventListener("DOMContentLoaded", () => {
   viewport.scene().addToFront(scene);
 
   const mouse = new ScrollerMouseController(scene);
+  viewport.mouse().addToBack(new CameraMouseController(scene.camera()));
   viewport.mouse().addToFront(mouse);
+
   const key = new ScrollerKeyController(mouse);
   viewport.key().addToFront(key);
+
+  viewport.key().addToBack(new CameraKeyController(scene.camera()));
 
   belt.addRenderable(viewport);
   root.appendChild(proj.container());

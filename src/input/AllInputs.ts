@@ -12,10 +12,15 @@ export default class AllInputs {
   _mouse: MouseInput;
   _key: KeyInput;
 
-  constructor(mainContainer: HTMLElement, domContainer: HTMLElement) {
+  constructor(mainContainer: HTMLElement, domContainer: HTMLElement = mainContainer) {
     if (!mainContainer) {
       throw new Error("container must be provided");
     }
+    mainContainer.tabIndex = 0;
+    mainContainer.addEventListener("contextmenu", (e)=>{
+      e.preventDefault();
+      return false;
+    });
     if (!domContainer) {
       throw new Error("domContainer must be provided");
     }

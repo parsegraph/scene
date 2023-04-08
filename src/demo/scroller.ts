@@ -13,6 +13,7 @@ import KeyTimer from "../input/KeyTimer";
 import AllInputs from "../input/AllInputs";
 import Background from "../viewport/Background";
 import CameraScene from "../CameraScene";
+import {CameraKeyController, CameraMouseController} from "../viewport";
 
 interface TileMap {
   get(x: number, y: number): Tile;
@@ -332,7 +333,14 @@ class ScrollerKeyController implements KeyController {
   }
 
   keydown(event: Keystroke) {
-    return this._keys.keydown(event);
+    const rv = this._keys.keydown(event);
+    switch(event.key()) {
+      case "a":
+      case "d":
+      case " ":
+        return true;
+    }
+    return rv;
   }
 
   keyup(event: Keystroke) {
@@ -386,9 +394,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const belt = new TimingBelt();
   const proj = new BasicProjector();
-  proj.container().tabIndex = 0;
 
-  const inputs = new AllInputs(proj.container(), proj.container());
+  const inputs = new AllInputs(proj.container());
   const viewport = new Viewport(inputs);
 
   const bg = new Background(proj, new Color(0.2, 0.2, 0.2, 1));
@@ -396,9 +403,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const scene = new TileScene(proj, 100, 256, 64);
   const mouse = new ScrollerMouseController(scene);
+  viewport.mouse().addToBack(new CameraMouseController(scene.camera()));
   viewport.mouse().addToFront(mouse);
   const key = new ScrollerKeyController(scene);
   viewport.key().addToFront(key);
+  viewport.key().addToBack(new CameraKeyController(scene.camera()));
   viewport.scene().addToFront(scene);
 
   setInterval(() => {
