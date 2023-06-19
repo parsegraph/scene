@@ -5,8 +5,13 @@ import Camera from "parsegraph-camera";
 
 import CameraScene from "../CameraScene";
 import { WorldLabels } from "../WorldLabel";
-import { Viewport, Background, CameraKeyController, CameraMouseController }  from "../viewport";
-import { AllInputs } from '../input';
+import {
+  Viewport,
+  Background,
+  CameraKeyController,
+  CameraMouseController,
+} from "../viewport";
+import { AllInputs } from "../input";
 
 const font = "96px sans-serif";
 
